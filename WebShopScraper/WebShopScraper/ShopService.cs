@@ -4,16 +4,16 @@ using System.Text;
 
 namespace WebShopScraper
 {
-    public class ShopService
+    public class ShopService : IShopService
     {
         private readonly IWebClient _webClient;
-        public ShopService(IWebClient webClient)
+        public ShopService()
         {
-           
+
         }
-        public void GetSooters()
+        public void ScrapeScooters()
         {
-            
+
         }
     }
 }

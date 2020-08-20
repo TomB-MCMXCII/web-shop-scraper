@@ -4,25 +4,29 @@ using System.Collections.Generic;
 using System.Text;
 using WebShopScraper.Models;
 using WebShopScraper.Models._1A;
-using WebShopScraper.Models._220;
 
 namespace WebShopScraper
 {
     public class Controller
     {
         private readonly IConfiguration _config;
-        public List<IShop> shops { get; set; }
-        public Controller(IConfiguration config)
+        private readonly IShopService _service;
+        public List<IShop> Shops;
+        public Controller(IConfiguration config,IShopService service)
         {
             _config = config;
-            shops = new List<IShop>();
-            shops.Add(new Shop1ACreator(_config).GetShop());
-            shops.Add(new Shop220Creator(_config).GetShop());
+            _service = service;
+            Shops = new List<IShop>();
         }
-
-        public void Run()
+        public void StartApplication()
         {
-
+            CreateShop(new Shop1ACreator(_config));
+            
+        }
+        public void CreateShop(ShopCreator creator)
+        {
+            creator.Create();
+            Shops.Add(creator.Shop);
         }
     }
 }

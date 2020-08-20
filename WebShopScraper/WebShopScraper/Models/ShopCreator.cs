@@ -1,11 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace WebShopScraper.Models
+﻿namespace WebShopScraper.Models
 {
     public abstract class ShopCreator
     {
-        public abstract IShop GetShop();
+        
+        public abstract IShop CreateInstance();
+       
+        public void Create()
+        {
+            CreateInstance();
+            
+            shop.SetBaseUrl();
+            shop.SetCategories();
+        }
+        
     }
 }
