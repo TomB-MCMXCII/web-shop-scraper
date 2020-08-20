@@ -7,20 +7,26 @@ using System.Text;
 
 namespace WebShopScraper
 {
-    public class WebClient
+    public class WebClient : IWebClient
     {
         private readonly IRestClient _client;
-        private readonly ILogger<WebClient> _log;
-        private readonly IConfiguration _config;
-        public WebClient(IRestClient client, ILogger<WebClient> log, IConfiguration config)
+        private readonly IRestRequest _request;
+        public WebClient(IRestClient client, IRestRequest request)
         {
             _client = client;
-            _log = log;
-            _config = config;
+            _request = request;
         }
-        public void GetPageHtmlContent()
+        public void SetBaseUri(string baseUri) => _client.BaseUrl = new Uri(baseUri);
+        public void SetPath(string path)
         {
-            
+            _request.Resource = path;
+            var request = _request;
+
+            _client.BuildUri(request);
+        }
+        public RestResponse GetPageHtmlContent()
+        {
+            throw new NotImplementedException();
         }
 
     }
