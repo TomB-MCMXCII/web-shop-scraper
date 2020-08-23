@@ -2,13 +2,13 @@
 {
     public abstract class ShopCreator
     {
-        
+        public IShop Shop { get; set; }
         public abstract IShop CreateInstance();
        
         public void Create()
         {
-            CreateInstance();
-            
+            var shop = CreateInstance();
+            Shop = shop;
             shop.SetBaseUrl();
             shop.SetCategories();
         }

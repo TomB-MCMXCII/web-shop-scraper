@@ -1,11 +1,12 @@
 ﻿using RestSharp;
+using System;
 
 namespace WebShopScraper
 {
     public interface IWebClient
     {
         RestResponse GetPageHtmlContent();
-        void SetBaseUri(string baseUri);
+        void SetBaseUri(Uri baseUri);
         void SetPath(string path);
     }
 }

@@ -25,6 +25,8 @@ namespace WebShopScraper
                  .ConfigureServices((context, services) =>
                  {
                      services.AddScoped<IRestClient, RestClient>();
+                     services.AddScoped<IWebClient, WebClient>();
+                     services.AddScoped<IRestRequest, RestRequest>();
                      services.AddScoped<IShopService, ShopService>();
                  })
                  .UseSerilog()

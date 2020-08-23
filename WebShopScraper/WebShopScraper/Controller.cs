@@ -21,7 +21,13 @@ namespace WebShopScraper
         public void StartApplication()
         {
             CreateShop(new Shop1ACreator(_config));
-            
+            StartScrape();
+        }
+        public void StartScrape()
+        {
+            _service.ScrapeScooters(Shops);
+            //_service.ScrapeLaptops(Shops);
+            //_service.ScrapeCpus(Shops);
         }
         public void CreateShop(ShopCreator creator)
         {

@@ -4,7 +4,6 @@ namespace WebShopScraper.Models._1A
 {
     public class Shop1ACreator : ShopCreator
     {
-        public IShop Shop { get; set; }
         private readonly IConfiguration _config;
         public Shop1ACreator(IConfiguration config)
         {
