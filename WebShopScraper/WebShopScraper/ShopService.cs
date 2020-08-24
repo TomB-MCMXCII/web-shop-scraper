@@ -29,13 +29,14 @@ namespace WebShopScraper
                 _client.SetBaseUri(a.BaseUrl);
                 _client.SetPath(a.Categories.Where(x => x.ProductCategory == ProductCategory.ElectricScooter).FirstOrDefault().Path);
 
-                var pageNumber = 0;
+                var pageNumber = 1;
                 var nextPage = true;
                 while(nextPage)
                 {
                     var response = _client.GetPageHtmlContent(pageNumber);
                     var parser = HtmlParserFactory.CreateInstance(a);
                     var products = parser.GetProducts(response.Result);
+                    pageNumber++;
                 }
                 
             }

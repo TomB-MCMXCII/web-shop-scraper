@@ -1,7 +1,9 @@
-﻿using HtmlAgilityPack;
+﻿using AngleSharp;
+using HtmlAgilityPack;
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 
@@ -16,13 +18,25 @@ namespace WebShopScraper.Models
         }
         public List<Product> GetProducts(string response)
         {
-            var document = new HtmlDocument();
-            document.LoadHtml(response);
-            var products = document.DocumentNode.SelectNodes("/html/body/div[1]/div[3]/div/div/div/div[2]");
-            var product = new Product()
+            var config = Configuration.Default;
+            var context = BrowsingContext.New(config);
+            var parser = context.GetService<AngleSharp.Html.Parser.IHtmlParser>();
+            var source = response;
+            var document = parser.ParseDocument(source);
+            var coll = document.GetElementsByClassName("catalog-taxons-product__hover");
+            foreach(var a in coll)
             {
+                var product = new Product()
+                {
+                    Name = a.GetElementsByClassName("catalog-taxons-product__name").FirstOrDefault().InnerHtml.Trim(),
 
-            };
+                    Price = decimal.Parse(a.GetElementsByClassName("catalog-taxons-product-price__item-price").FirstOrDefault().ChildNodes[1].TextContent.Replace(',','.')),
+                };
+                _products.Add(product);
+            }
+
+
+            
             return _products;
         }
     }

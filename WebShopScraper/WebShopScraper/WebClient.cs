@@ -22,7 +22,7 @@ namespace WebShopScraper
         }
         public async Task<string> GetPageHtmlContent(int pageNumber)
         {
-            var response = await _client.GetAsync(_path + $"?page={pageNumber}");
+            var response = await _client.GetAsync(_path + $"&page={pageNumber}");
             var taskString = response.Content.ReadAsStringAsync();
             taskString.Wait();
             return taskString.Result;
