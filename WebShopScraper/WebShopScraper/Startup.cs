@@ -7,11 +7,17 @@ using System.Collections.Generic;
 using System.Text;
 using RestSharp;
 using System.Net.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebShopScraper
 {
     public class Startup
     {
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+        private IConfiguration Configuration { get; }
         public void Configure()
         {
             var builder = new ConfigurationBuilder();
@@ -25,7 +31,8 @@ namespace WebShopScraper
             var host = Host.CreateDefaultBuilder()
                  .ConfigureServices((context, services) =>
                  {
-                    
+                     services.AddDbContext<WebShopScraperDbContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("myconn")));
                      services.AddScoped<IWebClient, WebClient>();
                      services.AddHttpClient();
                      services.AddScoped<IShopService, ShopService>();

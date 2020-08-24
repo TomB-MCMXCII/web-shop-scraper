@@ -10,9 +10,11 @@ namespace WebShopScraper
     public class ShopService : IShopService
     {
         private readonly IWebClient _client;
-        public ShopService(IWebClient client)
+        private readonly IProductService _productService;
+        public ShopService(IWebClient client, IProductService productService)
         {
             _client = client;
+            _productService = productService;
         }
         public void ScrapeCpus(List<IShop> shops)
         {
@@ -24,6 +26,7 @@ namespace WebShopScraper
         }
         public void ScrapeScooters(List<IShop> shops)
         {
+            var products = new List<Product>();
             foreach(var a in shops)
             {
                 _client.SetBaseUri(a.BaseUrl);
@@ -35,11 +38,12 @@ namespace WebShopScraper
                 {
                     var response = _client.GetPageHtmlContent(pageNumber);
                     var parser = HtmlParserFactory.CreateInstance(a);
-                    var products = parser.GetProducts(response.Result);
+                    products = parser.GetProducts(response.Result);
+                    if (products.Count == 0) nextPage = false;
                     pageNumber++;
-                }
-                
+                }  
             }
+            _productService.AddProducts(products);
         }
     }
 }
