@@ -1,44 +1,31 @@
-﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using RestSharp;
+﻿using RestSharp;
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace WebShopScraper
 {
     public class WebClient : IWebClient
     {
-        private readonly IRestClient _client;
-        private readonly IRestRequest _request;
-        private List<string> contents;
-        public WebClient(IRestClient client, IRestRequest request)
+        private IHttpClientFactory _httpClientFactory { get; set; }
+        private HttpClient _client { get; set; }
+        private string _path { get; set; }
+        public WebClient(IHttpClientFactory httpClientFactory)
         {
-            _client = client;
-            _request = request;
-            contents = new List<string>();
+            _httpClientFactory = httpClientFactory;
+            _client = _httpClientFactory.CreateClient();
         }
-        public void SetBaseUri(Uri baseUri) => _client.BaseUrl = baseUri;
+        public void SetBaseUri(Uri baseUri) => _client.BaseAddress = baseUri;
         public void SetPath(string path)
         {
-            _request.Resource = path;
-            var request = _request;
-
-            _client.BuildUri(request);
+            _path = path;
         }
-        public RestResponse GetPageHtmlContent()
+        public async Task<string> GetPageHtmlContent(int pageNumber)
         {
-            var page = 0;
-            IRestResponse response;
-            while (true)
-            {
-                _request.Method = Method.GET;
-                _request.AddParameter("page", 4);
-                response = _client.Execute(_request);
-                responses.Add(response.Content);
-                page++;
-            }
-            //return response;
+            var response = await _client.GetAsync(_path + $"?page={pageNumber}");
+            var taskString = response.Content.ReadAsStringAsync();
+            taskString.Wait();
+            return taskString.Result;
         }
 
     }

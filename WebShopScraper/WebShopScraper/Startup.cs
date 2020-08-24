@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using RestSharp;
+using System.Net.Http;
 
 namespace WebShopScraper
 {
@@ -24,9 +25,9 @@ namespace WebShopScraper
             var host = Host.CreateDefaultBuilder()
                  .ConfigureServices((context, services) =>
                  {
-                     services.AddScoped<IRestClient, RestClient>();
+                    
                      services.AddScoped<IWebClient, WebClient>();
-                     services.AddScoped<IRestRequest, RestRequest>();
+                     services.AddHttpClient();
                      services.AddScoped<IShopService, ShopService>();
                  })
                  .UseSerilog()

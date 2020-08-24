@@ -11,12 +11,12 @@ namespace WebShopScraper.Models
         private readonly IConfiguration _config;
         public Uri BaseUrl { get; set; }
         public List<Category> Categories { get; set; }
+        public ShopName ShopName { get; private set; }
         public Shop1A(IConfiguration config)
         {
             _config = config;
             Categories = new List<Category>();
         }
-
         public void SetBaseUrl() => BaseUrl = new Uri(_config.GetSection("1A:BaseUrl").Value.ToString());
         public void SetCategories()
         {
@@ -25,7 +25,7 @@ namespace WebShopScraper.Models
                 Categories.Add(new Category()
                 {
                     ProductCategory = a,
-                    Uri = _config.GetSection($"1A:CategoryPaths").GetSection($"{a}").Value
+                    Path = _config.GetSection($"1A:CategoryPaths").GetSection($"{a}").Value
             });
             }
         }

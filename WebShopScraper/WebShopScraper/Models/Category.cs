@@ -7,6 +7,6 @@ namespace WebShopScraper.Models
     public class Category
     {
         public ProductCategory ProductCategory { get; set; }
-        public string Uri { get; set; }
+        public string Path { get; set; }
     }
 }

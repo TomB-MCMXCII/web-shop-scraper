@@ -14,7 +14,5 @@ namespace WebShopScraper.Models._1A
             Shop = new Shop1A(_config);
             return Shop;
         }
-
-       
     }
 }

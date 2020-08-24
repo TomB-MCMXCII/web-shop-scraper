@@ -20,8 +20,12 @@ namespace WebShopScraper
         }
         public void StartApplication()
         {
-            CreateShop(new Shop1ACreator(_config));
+            SetupShops();
             StartScrape();
+        }
+        public void SetupShops()
+        {
+            CreateShop(new Shop1ACreator(_config));
         }
         public void StartScrape()
         {

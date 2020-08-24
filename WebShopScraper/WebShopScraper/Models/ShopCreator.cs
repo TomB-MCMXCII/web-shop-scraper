@@ -4,7 +4,6 @@
     {
         public IShop Shop { get; set; }
         public abstract IShop CreateInstance();
-       
         public void Create()
         {
             var shop = CreateInstance();
