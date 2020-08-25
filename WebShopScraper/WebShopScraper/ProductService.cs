@@ -7,10 +7,14 @@ namespace WebShopScraper
 {
     public class ProductService : IProductService
     {
-
-        public void AddProducts(IEnumerable products)
+        private readonly IRepository _repository;
+        public ProductService(IRepository repository)
         {
-
+            _repository = repository;
+        }
+        public void AddProducts(IEnumerable<Product> products)
+        {
+            _repository.Add(products);
         }
         public void GetProducts()
         {

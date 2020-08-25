@@ -38,9 +38,16 @@ namespace WebShopScraper
                 {
                     var response = _client.GetPageHtmlContent(pageNumber);
                     var parser = HtmlParserFactory.CreateInstance(a);
-                    products = parser.GetProducts(response.Result);
-                    if (products.Count == 0) nextPage = false;
-                    pageNumber++;
+                    var parsedProducts = parser.GetProducts(response.Result);
+                    if (parsedProducts.Count == 0)
+                    { 
+                        nextPage = false;
+                    }
+                    else 
+                    {
+                        products.AddRange(parsedProducts);
+                        pageNumber++; 
+                    }   
                 }  
             }
             _productService.AddProducts(products);
