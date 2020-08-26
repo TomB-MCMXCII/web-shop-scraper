@@ -21,26 +21,32 @@ namespace WebShopScraper
                     .WriteTo.Console()
                     .CreateLogger();
 
-            var host = Host.CreateDefaultBuilder()
-                 .ConfigureServices((context, services) =>
-                 {
-                     services.AddDbContext<WebShopScraperDbContext>(options =>
-                        options.UseSqlServer("Server =.\\SQLEXPRESS; Database = Scraper; Trusted_Connection = True;"));
-                     services.AddScoped<IWebClient, WebClient>();
-                     services.AddHttpClient();
-                     services.AddScoped<IShopService, ShopService>();
-                     services.AddScoped<IProductService, ProductService>();
-                     services.AddScoped<IRepository, Repository>();
-                     services.AddScoped<IWebShopScraperDbContext>(provider => provider.GetService<WebShopScraperDbContext>());
-                     services.AddScoped<IDbService, DbService>();
-                 })
-                 .UseSerilog()
-                 .Build();
-
+            var host = CreateHostBuilder(args)
+                .UseSerilog()
+                .Build();
+          
             var controller = ActivatorUtilities.CreateInstance<Controller>(host.Services);
             controller.StartApplication();
         }
 
-        
+        public static IHostBuilder CreateHostBuilder(string[] args) 
+        {
+            var host = Host.CreateDefaultBuilder(args)
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddDbContext<WebShopScraperDbContext>(options =>
+                       options.UseSqlServer("Server =.\\SQLEXPRESS; Database = Scraper; Trusted_Connection = True;"));
+                    services.AddScoped<IWebClient, WebClient>();
+                    services.AddHttpClient();
+                    services.AddScoped<IShopService, ShopService>();
+                    services.AddScoped<IProductService, ProductService>();
+                    services.AddScoped<IRepository, Repository>();
+                    services.AddScoped<IWebShopScraperDbContext>(provider => provider.GetService<WebShopScraperDbContext>());
+                    services.AddScoped<IRepositoryService, DbService>();
+                });
+
+            return host;
+        }
+
     }
 }

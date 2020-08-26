@@ -8,6 +8,8 @@ namespace WebShopScraper
         void Add(IEnumerable<Product> products);
         void Delete();
         void Update();
-
+        void CheckHighestPrice();
+        void CheckLowestPrice();
+        void CheckAvgPrice();
     }
 }

@@ -4,22 +4,30 @@ using System.Text;
 
 namespace WebShopScraper
 {
-    public class Repository : IRepository
+    public class DbService : IRepositoryService
     {
-        private readonly IDbService _service;
-        public Repository(IDbService service)
+        private readonly IWebShopScraperDbContext _context;
+        public DbService(IWebShopScraperDbContext context)
         {
-            _service = service;
+            _context = context;
         }
+
         public void Add(IEnumerable<Product> products)
         {
-            _service.Add(products);
+            _context.Products.AddRange(products);
+            _context.SaveChanges();
         }
+
         public void Delete()
         {
             throw new NotImplementedException();
         }
+
         public void Update()
+        {
+            throw new NotImplementedException();
+        }
+        public void GetByName()
         {
             throw new NotImplementedException();
         }

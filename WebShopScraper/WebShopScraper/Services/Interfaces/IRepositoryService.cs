@@ -2,10 +2,11 @@
 
 namespace WebShopScraper
 {
-    public interface IDbService
+    public interface IRepositoryService
     {
         void Add(IEnumerable<Product> products);
         void Delete();
         void Update();
+        void GetByName();
     }
 }
