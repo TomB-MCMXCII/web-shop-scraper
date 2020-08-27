@@ -5,7 +5,7 @@ namespace WebShopScraper
 {
     public interface IRepository
     {
-        void Add(IEnumerable<Product> products);
+        void SaveProducts(IEnumerable<Product> products);
         void Delete();
         void Update();
         void CheckHighestPrice();

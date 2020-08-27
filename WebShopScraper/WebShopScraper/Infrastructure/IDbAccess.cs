@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace WebShopScraper
 {
-    public interface IWebShopScraperDbContext
+    public interface IDbAccess
     {
         DbSet<Product> Products { get; set; }
         public int SaveChanges();

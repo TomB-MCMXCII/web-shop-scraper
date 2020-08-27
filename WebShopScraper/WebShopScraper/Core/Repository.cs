@@ -6,14 +6,14 @@ namespace WebShopScraper
 {
     public class Repository : IRepository
     {
-        private readonly IRepositoryService _service;
-        public Repository(IRepositoryService service)
+        private readonly IDataAccess _dataAccess;
+        public Repository(IDataAccess dataAccess)
         {
-            _service = service;
+            _dataAccess = dataAccess;
         }
-        public void Add(IEnumerable<Product> products)
+        public void SaveProducts(IEnumerable<Product> products)
         {
-            _service.Add(products);
+            _dataAccess.Add(products);
         }
         public void Delete()
         {

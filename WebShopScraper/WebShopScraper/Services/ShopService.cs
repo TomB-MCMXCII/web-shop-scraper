@@ -10,11 +10,12 @@ namespace WebShopScraper
     public class ShopService : IShopService
     {
         private readonly IWebClient _client;
-        private readonly IProductService _productService;
-        public ShopService(IWebClient client, IProductService productService)
+        
+        private Repository _repository;
+        public ShopService(IWebClient client,IDataAccess dataAccess)
         {
             _client = client;
-            _productService = productService;
+            _repository = new Repository(dataAccess);
         }
         public void ScrapeCpus(List<IShop> shops)
         {
@@ -50,7 +51,7 @@ namespace WebShopScraper
                     }   
                 }  
             }
-            _productService.AddProducts(products);
+            _repository.SaveProducts(products);
         }
     }
 }

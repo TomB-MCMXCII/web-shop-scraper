@@ -4,18 +4,18 @@ using System.Text;
 
 namespace WebShopScraper
 {
-    public class DbService : IRepositoryService
+    public class DataAccess : IDataAccess
     {
-        private readonly IWebShopScraperDbContext _context;
-        public DbService(IWebShopScraperDbContext context)
+        private readonly IDbAccess _dbAccess;
+        public DataAccess(IDbAccess dbAccess)
         {
-            _context = context;
+            _dbAccess = dbAccess;
         }
 
         public void Add(IEnumerable<Product> products)
         {
-            _context.Products.AddRange(products);
-            _context.SaveChanges();
+            _dbAccess.Products.AddRange(products);
+            _dbAccess.SaveChanges();
         }
 
         public void Delete()

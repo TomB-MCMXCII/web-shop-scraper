@@ -39,10 +39,9 @@ namespace WebShopScraper
                     services.AddScoped<IWebClient, WebClient>();
                     services.AddHttpClient();
                     services.AddScoped<IShopService, ShopService>();
-                    services.AddScoped<IProductService, ProductService>();
                     services.AddScoped<IRepository, Repository>();
-                    services.AddScoped<IWebShopScraperDbContext>(provider => provider.GetService<WebShopScraperDbContext>());
-                    services.AddScoped<IRepositoryService, DbService>();
+                    services.AddScoped<IDbAccess>(provider => provider.GetService<WebShopScraperDbContext>());
+                    services.AddScoped<IDataAccess, DataAccess>();
                 });
 
             return host;

@@ -14,10 +14,10 @@ namespace WebShopScraper.Test
         public void ProductsShouldBeAdded(IEnumerable<Product> products)
         {
             var repoMock = new Mock<IRepository>();
-            var repoServiceMock = new Mock<IRepositoryService>();
+            var repoServiceMock = new Mock<IDataAccess>();
             
 
-            repoMock.Setup(_ => _.Add(products));
+            repoMock.Setup(_ => _.SaveProducts(products));
             repoServiceMock.Setup(_ => _.GetByName());
         }
         public static IEnumerable<Product> GetData()
