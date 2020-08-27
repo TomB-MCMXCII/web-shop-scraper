@@ -11,11 +11,11 @@ namespace WebShopScraper
     {
         private readonly IWebClient _client;
         
-        private Repository _repository;
-        public ShopService(IWebClient client,IDataAccess dataAccess)
+        private IRepository _repository;
+        public ShopService(IWebClient client,IRepository repository)
         {
             _client = client;
-            _repository = new Repository(dataAccess);
+            _repository = repository;
         }
         public void ScrapeCpus(List<IShop> shops)
         {

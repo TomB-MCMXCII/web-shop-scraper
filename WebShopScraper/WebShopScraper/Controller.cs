@@ -8,12 +8,12 @@ using WebShopScraper.Models._1A;
 namespace WebShopScraper
 {
     //todo rename class
-    public class Controller
+    public class Application
     {
         private readonly IConfiguration _config;
         private readonly IShopService _service;
         public List<IShop> Shops;
-        public Controller(IConfiguration config,IShopService service)
+        public Application(IConfiguration config,IShopService service)
         {
             _config = config;
             _service = service;

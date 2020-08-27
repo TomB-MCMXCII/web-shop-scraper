@@ -25,7 +25,7 @@ namespace WebShopScraper
                 .UseSerilog()
                 .Build();
           
-            var controller = ActivatorUtilities.CreateInstance<Controller>(host.Services);
+            var controller = ActivatorUtilities.CreateInstance<Application>(host.Services);
             controller.StartApplication();
         }
 
@@ -40,8 +40,8 @@ namespace WebShopScraper
                     services.AddHttpClient();
                     services.AddScoped<IShopService, ShopService>();
                     services.AddScoped<IRepository, Repository>();
-                    services.AddScoped<IDbAccess>(provider => provider.GetService<WebShopScraperDbContext>());
-                    services.AddScoped<IDataAccess, DataAccess>();
+                    //services.AddScoped(provider => provider.GetService<WebShopScraperDbContext>());
+                    services.AddScoped<IDbContext, WebShopScraperDbContext>();
                 });
 
             return host;

@@ -6,20 +6,37 @@ namespace WebShopScraper
 {
     public class Repository : IRepository
     {
-        private readonly IDataAccess _dataAccess;
-        public Repository(IDataAccess dataAccess)
+        private readonly IDbContext _context;
+        public Repository(IDbContext context)
         {
-            _dataAccess = dataAccess;
+            _context = context;
         }
         public void SaveProducts(IEnumerable<Product> products)
         {
-            _dataAccess.Add(products);
+            _context.Products.AddRange(products);
+            _context.SaveChanges();
         }
-        public void Delete()
+        public void DeleteProducts()
         {
             throw new NotImplementedException();
         }
-        public void Update()
+
+        public void DeleteProduct()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateProducts()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UpdateProduct()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GetProducts()
         {
             throw new NotImplementedException();
         }
@@ -37,5 +54,7 @@ namespace WebShopScraper
         {
             throw new NotImplementedException();
         }
+
+        
     }
 }
