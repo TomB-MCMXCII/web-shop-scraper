@@ -11,12 +11,12 @@ namespace WebShopScraper.Models
 {
     public class HtmlParser1A : IHtmlParser
     {
-        private List<Product> _products;
+        private List<ElectricScooter> _products;
         public HtmlParser1A()
         {
-            _products = new List<Product>();
+            _products = new List<ElectricScooter>();
         }
-        public List<Product> GetProducts(string response)
+        public List<ElectricScooter> GetProducts(string response)
         {
             var config = Configuration.Default;
             var context = BrowsingContext.New(config);
@@ -26,11 +26,11 @@ namespace WebShopScraper.Models
             var coll = document.GetElementsByClassName("catalog-taxons-product__hover");
             foreach(var a in coll)
             {
-                var product = new Product()
+                var product = new ElectricScooter()
                 {
                     Name = a.GetElementsByClassName("catalog-taxons-product__name").FirstOrDefault().InnerHtml.Trim(),
-
                     Price = decimal.Parse(a.GetElementsByClassName("catalog-taxons-product-price__item-price").FirstOrDefault().ChildNodes[1].TextContent.Replace(',','.')),
+                    Shop = ShopName.Shop1A
                 };
                 _products.Add(product);
             }

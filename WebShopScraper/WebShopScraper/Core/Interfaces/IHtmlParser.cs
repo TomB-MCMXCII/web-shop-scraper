@@ -6,6 +6,6 @@ namespace WebShopScraper.Models
 {
     public interface IHtmlParser
     {
-        List<Product> GetProducts(string response);
+        List<ElectricScooter> GetProducts(string response);
     }
 }

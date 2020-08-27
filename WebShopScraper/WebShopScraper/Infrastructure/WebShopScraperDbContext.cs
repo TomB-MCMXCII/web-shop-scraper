@@ -8,11 +8,11 @@ namespace WebShopScraper
 {
     public class WebShopScraperDbContext: DbContext, IDbContext
     {
-        public DbSet<Product> Products { get; set; }
-        public WebShopScraperDbContext(DbContextOptions options) : base(options)
+        public DbSet<ElectricScooter> ElectricScooters { get; set; }
+        public WebShopScraperDbContext(DbContextOptions<WebShopScraperDbContext> options ) : base(options)
         {
 
         }
-        
+
     }
 }

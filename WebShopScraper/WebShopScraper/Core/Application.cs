@@ -7,7 +7,6 @@ using WebShopScraper.Models._1A;
 
 namespace WebShopScraper
 {
-    //todo rename class
     public class Application
     {
         private readonly IConfiguration _config;

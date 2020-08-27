@@ -6,6 +6,7 @@ using System;
 using RestSharp;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
+using WebShopScraper.Core;
 
 namespace WebShopScraper
 {
@@ -39,8 +40,8 @@ namespace WebShopScraper
                     services.AddScoped<IWebClient, WebClient>();
                     services.AddHttpClient();
                     services.AddScoped<IShopService, ShopService>();
-                    services.AddScoped<IRepository, Repository>();
-                    //services.AddScoped(provider => provider.GetService<WebShopScraperDbContext>());
+                    services.AddScoped<IScooterService, ScooterService>();
+                    services.AddScoped (typeof(IRepository<>), typeof(BaseRepository<>));
                     services.AddScoped<IDbContext, WebShopScraperDbContext>();
                 });
 

@@ -1,21 +1,23 @@
-﻿using RestSharp;
+﻿using Microsoft.EntityFrameworkCore;
+using RestSharp;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using WebShopScraper.Core;
+using WebShopScraper.Core.Models;
 using WebShopScraper.Models;
 
 namespace WebShopScraper
 {
     public class ShopService : IShopService
-    {
+    { 
         private readonly IWebClient _client;
-        
-        private IRepository _repository;
-        public ShopService(IWebClient client,IRepository repository)
+        private readonly IScooterService _scooterService;
+        public ShopService(IWebClient client, IScooterService scooterService)
         {
             _client = client;
-            _repository = repository;
+            _scooterService = scooterService;
         }
         public void ScrapeCpus(List<IShop> shops)
         {
@@ -27,7 +29,7 @@ namespace WebShopScraper
         }
         public void ScrapeScooters(List<IShop> shops)
         {
-            var products = new List<Product>();
+            var products = new List<ElectricScooter>();
             foreach(var a in shops)
             {
                 _client.SetBaseUri(a.BaseUrl);
@@ -51,7 +53,10 @@ namespace WebShopScraper
                     }   
                 }  
             }
-            _repository.SaveProducts(products);
+
+           
+            
+            _scooterService.SaveProducts(products);
         }
     }
 }

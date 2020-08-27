@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebShopScraper;
 
 namespace WebShopScraper.Migrations
 {
     [DbContext(typeof(WebShopScraperDbContext))]
-    partial class WebShopScraperDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200827102212_RenamedProductToElectricScooter")]
+    partial class RenamedProductToElectricScooter
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

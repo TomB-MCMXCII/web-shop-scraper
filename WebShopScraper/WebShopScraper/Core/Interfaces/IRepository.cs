@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace WebShopScraper
 {
-    public interface IRepository
+    public interface IRepository<TEntity> where TEntity : class
     {
-        void SaveProducts(IEnumerable<Product> products);
+        void SaveProducts(IEnumerable<TEntity> products);
         void DeleteProducts();
         void DeleteProduct();
         void UpdateProducts();
         void UpdateProduct();
-        void GetProducts();
+        IEnumerable<IProduct> GetProducts();
         void CheckHighestPrice();
         void CheckLowestPrice();
         void CheckAvgPrice();

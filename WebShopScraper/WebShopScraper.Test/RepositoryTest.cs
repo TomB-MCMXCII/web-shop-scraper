@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
+using WebShopScraper.Core;
 
 namespace WebShopScraper.Test
 {
@@ -9,19 +10,18 @@ namespace WebShopScraper.Test
     {
         [DataTestMethod]
         [DynamicData(nameof(GetData), DynamicDataSourceType.Method)]
-        public void ProductsShouldBeAdded(IEnumerable<Product> products)
+        public void ProductsShouldBeAdded(IEnumerable<ElectricScooter> products)
         {
-            var repoMock = new Mock<IRepository>();
+            var repoMock = new Mock<IScooterService>();
             
+            repoMock.Setup(_ => _.SaveProducts(products));
             
-
-           
         }
-        public static IEnumerable<Product> GetData()
+        public static IEnumerable<ElectricScooter> GetData()
         {
-            yield return new Product() { Name = "Scooter Miyazaki" };
-            yield return new Product() { Name = "Scooter 2008" };
-            yield return new Product() { Name = "Scooter Arturio" };
+            yield return new ElectricScooter() { Name = "Scooter Miyazaki" };
+            yield return new ElectricScooter() { Name = "Scooter 2008" };
+            yield return new ElectricScooter() { Name = "Scooter Arturio" };
         }
 
     }

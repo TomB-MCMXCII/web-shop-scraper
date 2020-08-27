@@ -9,8 +9,9 @@ namespace WebShopScraper
 {
     public interface IDbContext
     {
-        DbSet<Product> Products { get; set; }
+        DbSet<ElectricScooter> ElectricScooters { get; set; }
         public int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+        DbSet<TEntity> Set<TEntity>() where TEntity : class;
     }
 }
