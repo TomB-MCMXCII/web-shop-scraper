@@ -7,29 +7,30 @@ namespace WebShopScraper.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Products",
+                name: "ElectricScooters",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductCategory = table.Column<int>(nullable: false),
-                    Shop = table.Column<int>(nullable: false),
+                    AvgPrice = table.Column<decimal>(nullable: false),
+                    HighPrice = table.Column<decimal>(nullable: false),
+                    LowPrice = table.Column<decimal>(nullable: false),
                     Name = table.Column<string>(nullable: true),
                     Price = table.Column<decimal>(nullable: false),
-                    LowPrice = table.Column<decimal>(nullable: false),
-                    HighPrice = table.Column<decimal>(nullable: false),
-                    AvgPrice = table.Column<decimal>(nullable: false)
+                    Shop = table.Column<int>(nullable: false),
+                    TotalSum = table.Column<int>(nullable: false),
+                    TimesAdded = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Products", x => x.Id);
+                    table.PrimaryKey("PK_ElectricScooters", x => x.Id);
                 });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Products");
+                name: "ElectricScooters");
         }
     }
 }

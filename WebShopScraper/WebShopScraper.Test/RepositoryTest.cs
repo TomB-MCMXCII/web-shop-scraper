@@ -12,9 +12,9 @@ namespace WebShopScraper.Test
         [DynamicData(nameof(GetData), DynamicDataSourceType.Method)]
         public void ProductsShouldBeAdded(IEnumerable<ElectricScooter> products)
         {
-            var repoMock = new Mock<IProductService>();
+            //var repoMock = new Mock<IProductService>();
             
-            repoMock.Setup(_ => _.SaveProducts(products));
+            //repoMock.Setup(_ => _.SaveProducts(products));
             
         }
         public static IEnumerable<ElectricScooter> GetData()

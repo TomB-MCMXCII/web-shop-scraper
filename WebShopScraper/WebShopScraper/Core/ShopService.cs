@@ -12,11 +12,12 @@ namespace WebShopScraper
     public class ShopService : IShopService
     { 
         private readonly IWebClient _client;
-        private readonly IProductService<object> _productService;
-        public ShopService(IWebClient client, IProductService<object> productService)
+        private readonly IServiceProvider _serviceProvider;
+        public ShopService(IWebClient client, IServiceProvider serviceProvider)
         {
             _client = client;
-            _productService = productService;
+            //_productService = productService;
+            _serviceProvider = serviceProvider;
         }
         public void ScrapeCpus(List<IShop> shops)
         {
@@ -28,6 +29,7 @@ namespace WebShopScraper
         }
         public void ScrapeScooters(List<IShop> shops)
         {
+            IProductService<ElectricScooter> _productService = (IProductService<ElectricScooter>)_serviceProvider.GetService(typeof(IProductService<ElectricScooter>));
             var products = new List<ElectricScooter>();
             foreach(var a in shops)
             {

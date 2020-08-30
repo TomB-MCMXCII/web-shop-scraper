@@ -2,17 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebShopScraper;
 
 namespace WebShopScraper.Migrations
 {
     [DbContext(typeof(WebShopScraperDbContext))]
-    [Migration("20200827101951_RemovedProductCategoryFromProductTable")]
-    partial class RemovedProductCategoryFromProductTable
+    partial class WebShopScraperDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,7 +18,7 @@ namespace WebShopScraper.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("WebShopScraper.Product", b =>
+            modelBuilder.Entity("WebShopScraper.ElectricScooter", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -45,9 +43,15 @@ namespace WebShopScraper.Migrations
                     b.Property<int>("Shop")
                         .HasColumnType("int");
 
+                    b.Property<int>("TimesAdded")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalSum")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Products");
+                    b.ToTable("ElectricScooters");
                 });
 #pragma warning restore 612, 618
         }

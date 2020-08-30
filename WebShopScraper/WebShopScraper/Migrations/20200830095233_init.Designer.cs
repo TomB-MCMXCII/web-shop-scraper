@@ -9,8 +9,8 @@ using WebShopScraper;
 namespace WebShopScraper.Migrations
 {
     [DbContext(typeof(WebShopScraperDbContext))]
-    [Migration("20200827102212_RenamedProductToElectricScooter")]
-    partial class RenamedProductToElectricScooter
+    [Migration("20200830095233_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,6 +43,12 @@ namespace WebShopScraper.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Shop")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TimesAdded")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalSum")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

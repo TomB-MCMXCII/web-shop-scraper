@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using WebShopScraper.Core.Models;
 
 namespace WebShopScraper.Core
 {
-    public class ProductService<TEntity> : IProductService<TEntity> where TEntity : class
+    public class ProductService<TEntity> : IProductService<TEntity> where TEntity : Product
     {
         private readonly IRepository<TEntity> _repository;
 
@@ -14,7 +15,7 @@ namespace WebShopScraper.Core
         }
         public void SaveProducts(IEnumerable<TEntity> products)
         {
-            _repository.SaveProducts(products);
+            _repository.Create(products);
         }
 
         public void SetAvgPrice()
@@ -31,5 +32,18 @@ namespace WebShopScraper.Core
         {
             throw new NotImplementedException();
         }
+        public bool ProductExists(TEntity product)
+        {
+            var product1 = _repository.ReadByName(product.Name);
+            if(product1 != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
     }
 }
