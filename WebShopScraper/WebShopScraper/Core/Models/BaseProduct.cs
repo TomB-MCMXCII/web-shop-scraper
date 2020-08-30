@@ -12,7 +12,7 @@ namespace WebShopScraper.Core.Models
         public string Name { get; set; }
         public decimal Price { get; set; }
         public ShopName Shop { get; set; }
-        public int TotalSum { get; set; }
+        public decimal TotalSum { get; set; }
         public int TimesAdded { get; set; }
     }
 }

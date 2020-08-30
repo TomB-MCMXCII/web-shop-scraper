@@ -17,9 +17,9 @@ namespace WebShopScraper.Core
             _context = context;
             _dbSet = context.Set<TEntity>();
         }
-        public void Create(IEnumerable<TEntity> products)
+        public void Create(TEntity product)
         {
-            _dbSet.AddRange(products);
+            _dbSet.Add(product);
             _context.SaveChanges();
         }
         public void Read(TEntity entity)
@@ -27,9 +27,10 @@ namespace WebShopScraper.Core
             throw new NotImplementedException();
         }
 
-        public void Update()
+        public void Update(TEntity entity)
         {
-            throw new NotImplementedException();
+            _dbSet.Update(entity);
+            _context.SaveChanges();
         }
 
         public void Delete()
@@ -39,7 +40,7 @@ namespace WebShopScraper.Core
 
         public TEntity ReadByName(string name)
         {
-            var product = _dbSet.Where(x => x.Name == name).FirstOrDefault(null);
+            var product = _dbSet.Where(x => x.Name == name).FirstOrDefault();
             return product;
         }
 

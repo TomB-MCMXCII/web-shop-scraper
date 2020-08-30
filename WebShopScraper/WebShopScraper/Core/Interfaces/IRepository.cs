@@ -6,11 +6,11 @@ namespace WebShopScraper
 {
     public interface IRepository<TEntity> where TEntity : Product
     {
-        void Create(IEnumerable<TEntity> entity);
+        void Create(TEntity entity);
         void Read(TEntity entity);
         TEntity ReadByName(string name);
         void Read();
-        void Update();
+        void Update(TEntity entity);
         void Delete();
     }
 }

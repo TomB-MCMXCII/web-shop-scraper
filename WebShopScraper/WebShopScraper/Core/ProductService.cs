@@ -13,37 +13,26 @@ namespace WebShopScraper.Core
         {
             _repository = repository;
         }
+
         public void SaveProducts(IEnumerable<TEntity> products)
         {
-            foreach(var p in products)
+            foreach(var newProduct in products)
             {
-                var product = ProductExists(p);
-                if(product!= null)
+                var oldProduct = ProductExists(newProduct);
+                if(oldProduct!= null)
                 {
-                    SetHighPrice(product);
+                    var toUpdate = ComparePrice(oldProduct,newProduct);
+                   
+                    _repository.Update(toUpdate);                   
                 }
                 else
                 {
-                    _repository.Create(products);
+                    newProduct.TimesAdded++;
+                    _repository.Create(newProduct);
                 }
-            }
-            
+            }  
         }
 
-        public void SetAvgPrice(TEntity product)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SetHighPrice(TEntity product)
-        {
-            
-        }
-
-        public void SetLowPrice(TEntity product)
-        {
-            throw new NotImplementedException();
-        }
         public TEntity ProductExists(TEntity product)
         {
             var product1 = _repository.ReadByName(product.Name);
@@ -56,5 +45,39 @@ namespace WebShopScraper.Core
                 return null;
             }
         }
+        public TEntity ComparePrice(TEntity foundProduct, TEntity newProduct)
+        {
+            var relativeValue = decimal.Compare(foundProduct.Price, newProduct.Price);
+
+            var productTimesAdd = foundProduct.TimesAdded;
+            foundProduct.TotalSum =+ newProduct.Price;
+            
+            if (productTimesAdd != 0)
+            {
+                foundProduct.AvgPrice = foundProduct.TotalSum / productTimesAdd;
+            }
+            if (relativeValue < 0)
+            {
+                foundProduct.TimesAdded++;
+                foundProduct.HighPrice = newProduct.Price;
+                foundProduct.Price = newProduct.Price;
+
+                return foundProduct;
+            }
+            if (relativeValue > 0)
+            {
+                foundProduct.TimesAdded++;
+                foundProduct.LowPrice = newProduct.Price;
+                foundProduct.Price = newProduct.Price;
+
+                return foundProduct;
+            }
+            else
+            {
+                return foundProduct;
+            }
+            
+        }
+
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using WebShopScraper.Core;
 using WebShopScraper.Core.Models;
 
@@ -10,16 +9,25 @@ namespace WebShopScraper.Test
     [TestClass]
     public class ProductServiceTest
     {
+        private static Mock<IRepository<Product>> _repoMock;
+        private static ProductService<Product> _productService;
+
+        [ClassInitialize]
+        public static void Product(TestContext context)
+        {
+            _repoMock = new Mock<IRepository<Product>>();
+            _productService = new ProductService<Product>(_repoMock.Object);
+        }
         [TestMethod]
         public void ProductExists_Returns_Product_if_it_exists()
         {
             //Arrange
             var product = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A };
-            var repoMock = new Mock<IRepository<Product>>();
-            var productService = new ProductService<Product>(repoMock.Object);
-            repoMock.Setup(_ => _.ReadByName(It.IsAny<string>())).Returns(product);
+            _repoMock.Setup(_ => _.ReadByName(It.IsAny<string>())).Returns(product);
+
             //Act
-            var returnedProduct = productService.ProductExists(product);
+            var returnedProduct = _productService.ProductExists(product);
+
             //Assert
             Assert.AreEqual(product, returnedProduct);
         }
@@ -30,11 +38,11 @@ namespace WebShopScraper.Test
             //Arrange
             ElectricScooter product = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A };
             ElectricScooter nullProduct = null;
-            var repoMock = new Mock<IRepository<Product>>();
-            var productServiceMock = new ProductService<Product>(repoMock.Object);
-            repoMock.Setup(_ => _.ReadByName(It.IsAny<string>())).Returns(nullProduct);
+            _repoMock.Setup(_ => _.ReadByName(It.IsAny<string>())).Returns(nullProduct);
+
             //Act
-            var returnedProduct = productServiceMock.ProductExists(product);
+            var returnedProduct = _productService.ProductExists(product);
+
             //Assert
             Assert.IsNull(returnedProduct);
         }
@@ -44,14 +52,58 @@ namespace WebShopScraper.Test
             //Arrange
             ElectricScooter product1 = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A };
             ElectricScooter product2 = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop220 };
-            var repoMock = new Mock<IRepository<Product>>();
-            var productServiceMock = new ProductService<Product>(repoMock.Object);
-            repoMock.Setup(_ => _.ReadByName(It.IsAny<string>())).Returns(product1);
+            _repoMock.Setup(_ => _.ReadByName(It.IsAny<string>())).Returns(product1);
+
             //Act
-            var returnedProduct = productServiceMock.ProductExists(product2);
+            var returnedProduct = _productService.ProductExists(product2);
+
             //Assert
             Assert.IsNull(returnedProduct);
         }
+        [TestMethod]
+        public void ComparePrice_Sets_highest_price_correctly()
+        {
+            //Arrange
+            ElectricScooter productOldPrice = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A };
+            ElectricScooter productNewPrice = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 350.56m, Shop = ShopName.Shop1A };
+
+            //Act
+            var comparedProdcut = _productService.ComparePrice(productOldPrice,productNewPrice);
+
+            //Assert
+            Assert.IsTrue(comparedProdcut.HighPrice == productNewPrice.Price);
+            Assert.IsTrue(comparedProdcut.Price == productNewPrice.Price);
+            Assert.IsFalse(comparedProdcut.LowPrice == productNewPrice.Price);
+        }
+        [TestMethod]
+        public void ComparePrice_Sets_lowest_price_correctly()
+        {
+            //Arrange
+            ElectricScooter productOldPrice = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 420.56m, Shop = ShopName.Shop1A };
+            ElectricScooter productNewPrice = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 350.56m, Shop = ShopName.Shop1A };
+
+            //Act
+            var comparedProdcut = _productService.ComparePrice(productOldPrice, productNewPrice);
+
+            //Assert
+            Assert.IsTrue(comparedProdcut.LowPrice == productNewPrice.Price);
+            Assert.IsTrue(comparedProdcut.Price == productNewPrice.Price);
+            Assert.IsFalse(comparedProdcut.HighPrice == productNewPrice.Price);
+        }
+        [TestMethod]
+        public void ComparePrice_sets_avgPrice_correctly()
+        {
+            //Arrange
+            ElectricScooter productOldPrice = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 420.56m, Shop = ShopName.Shop1A,TimesAdded = 1 };
+            ElectricScooter productNewPrice = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 350.56m, Shop = ShopName.Shop1A };
+
+            //Act
+            var comparedProdcut = _productService.ComparePrice(productOldPrice, productNewPrice);
+            var totalSum = productOldPrice.TotalSum + productNewPrice.Price;
+            //Assert
+            Assert.IsTrue(comparedProdcut.AvgPrice == totalSum / productOldPrice.TimesAdded);
+        }
+      
         //[TestMethod]
         //public void SetHighPrice_Sets_new_high_price_if_current_price_is_higher()
         //{
@@ -59,7 +111,7 @@ namespace WebShopScraper.Test
         //    var repoMock = new Mock<IRepository<Product>>();
         //    var productServiceMock = new ProductService<Product>(repoMock.Object);
         //    repoMock.Setup(x => x.ReadByName(It.IsAny<string>())).Returns(product);
-            
+
         //}
         //[TestMethod]
         //[DynamicData(nameof(GetDistinctProducts), DynamicDataSourceType.Method)]
