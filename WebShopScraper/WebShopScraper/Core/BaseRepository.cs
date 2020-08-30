@@ -39,7 +39,7 @@ namespace WebShopScraper.Core
 
         public TEntity ReadByName(string name)
         {
-            var product = _dbSet.Where(x => x.Name == name).FirstOrDefault();
+            var product = _dbSet.Where(x => x.Name == name).FirstOrDefault(null);
             return product;
         }
 

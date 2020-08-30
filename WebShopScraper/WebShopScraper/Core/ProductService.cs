@@ -15,35 +15,46 @@ namespace WebShopScraper.Core
         }
         public void SaveProducts(IEnumerable<TEntity> products)
         {
-            _repository.Create(products);
+            foreach(var p in products)
+            {
+                var product = ProductExists(p);
+                if(product!= null)
+                {
+                    SetHighPrice(product);
+                }
+                else
+                {
+                    _repository.Create(products);
+                }
+            }
+            
         }
 
-        public void SetAvgPrice()
+        public void SetAvgPrice(TEntity product)
         {
             throw new NotImplementedException();
         }
 
-        public void SetHighPrice()
+        public void SetHighPrice(TEntity product)
         {
-            throw new NotImplementedException();
+            
         }
 
-        public void SetLowPrice()
+        public void SetLowPrice(TEntity product)
         {
             throw new NotImplementedException();
         }
-        public bool ProductExists(TEntity product)
+        public TEntity ProductExists(TEntity product)
         {
             var product1 = _repository.ReadByName(product.Name);
-            if(product1 != null)
+            if(product1 != null && product.Shop == product1.Shop)
             {
-                return true;
+                return product1;
             }
             else
             {
-                return false;
+                return null;
             }
         }
-
     }
 }
