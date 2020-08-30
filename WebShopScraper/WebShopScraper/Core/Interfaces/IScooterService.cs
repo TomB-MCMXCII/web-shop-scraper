@@ -2,8 +2,11 @@
 
 namespace WebShopScraper.Core
 {
-    public interface IScooterService
+    public interface IProductService<TEntity> where TEntity : class
     {
-        void SaveProducts(IEnumerable<ElectricScooter> products);
+        void SaveProducts(IEnumerable<TEntity> products);
+        public void SetHighPrice();
+        public void SetLowPrice();
+        public void SetAvgPrice();
     }
 }

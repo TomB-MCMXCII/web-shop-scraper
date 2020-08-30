@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using WebShopScraper.Core;
-using WebShopScraper.Core.Models;
 using WebShopScraper.Models;
 
 namespace WebShopScraper
@@ -13,11 +12,11 @@ namespace WebShopScraper
     public class ShopService : IShopService
     { 
         private readonly IWebClient _client;
-        private readonly IScooterService _scooterService;
-        public ShopService(IWebClient client, IScooterService scooterService)
+        private readonly IProductService<object> _productService;
+        public ShopService(IWebClient client, IProductService<object> productService)
         {
             _client = client;
-            _scooterService = scooterService;
+            _productService = productService;
         }
         public void ScrapeCpus(List<IShop> shops)
         {
@@ -53,10 +52,7 @@ namespace WebShopScraper
                     }   
                 }  
             }
-
-           
-            
-            _scooterService.SaveProducts(products);
+            _productService.SaveProducts(products);
         }
     }
 }

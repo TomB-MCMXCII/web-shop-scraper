@@ -7,28 +7,18 @@ namespace WebShopScraper.Core
 {
     public class BaseRepository<TEntity> : IRepository<TEntity> where TEntity : class
     {
-        internal WebShopScraperDbContext _context;
+        internal IDbContext _context;
         internal DbSet<TEntity> _dbSet;
-        public BaseRepository(WebShopScraperDbContext context)
+        public BaseRepository(IDbContext context)
         {
             _context = context;
             _dbSet = context.Set<TEntity>();
         }
-        public void CheckAvgPrice()
+        
+        public void Create()
         {
-            throw new NotImplementedException();
+            //_dbSet.Add()
         }
-
-        public void CheckHighestPrice()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void CheckLowestPrice()
-        {
-            throw new NotImplementedException();
-        }
-
         public void DeleteProduct()
         {
             throw new NotImplementedException();

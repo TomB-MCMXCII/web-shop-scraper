@@ -40,7 +40,7 @@ namespace WebShopScraper
                     services.AddScoped<IWebClient, WebClient>();
                     services.AddHttpClient();
                     services.AddScoped<IShopService, ShopService>();
-                    services.AddScoped<IScooterService, ScooterService>();
+                    services.AddScoped (typeof(IProductService<>), typeof(ProductService<>));
                     services.AddScoped (typeof(IRepository<>), typeof(BaseRepository<>));
                     services.AddScoped<IDbContext, WebShopScraperDbContext>();
                 });

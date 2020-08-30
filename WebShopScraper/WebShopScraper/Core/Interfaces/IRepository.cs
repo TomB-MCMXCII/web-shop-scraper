@@ -11,8 +11,5 @@ namespace WebShopScraper
         void UpdateProducts();
         void UpdateProduct();
         IEnumerable<IProduct> GetProducts();
-        void CheckHighestPrice();
-        void CheckLowestPrice();
-        void CheckAvgPrice();
     }
 }
