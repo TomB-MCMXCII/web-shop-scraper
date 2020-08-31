@@ -5,8 +5,8 @@ using WebShopScraper.Core.Models;
 
 namespace WebShopScraper.Models
 {
-    public interface IHtmlParser<TEntity> where TEntity : Product
+    public interface IHtmlParser
     {
-        List<TEntity> GetProducts(string response);
+        List<Product> GetProducts(string response);
     }
 }

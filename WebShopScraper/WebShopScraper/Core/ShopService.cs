@@ -2,6 +2,7 @@
 using RestSharp;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using WebShopScraper.Core;
@@ -42,19 +43,29 @@ namespace WebShopScraper
                 while(nextPage)
                 {
                     var response = _client.GetPageHtmlContent(pageNumber);
-                    var parser = HtmlParserFactory<ElectricScooter>.CreateInstance(a);
+                    var parser = HtmlParserFactory.CreateInstance(a);
                     var parsedProducts = parser.GetProducts(response.Result);
+                   
                     if (parsedProducts.Count == 0)
                     { 
                         nextPage = false;
                     }
                     else 
                     {
-                        products.AddRange(parsedProducts);
+                        foreach (var c in parsedProducts)
+                        {
+                            products.Add(new ElectricScooter()
+                            {
+                                Name = c.Name,
+                                Price = c.Price,
+                                Shop = c.Shop,
+                            });
+                        }
                         pageNumber++; 
                     }   
                 }  
             }
+            
             _productService.SaveProducts(products);
         }
     }

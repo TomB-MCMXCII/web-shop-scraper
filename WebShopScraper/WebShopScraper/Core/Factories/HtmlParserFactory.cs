@@ -8,14 +8,14 @@ using WebShopScraper.Models;
 
 namespace WebShopScraper
 {
-    public static class HtmlParserFactory<TEntity> where TEntity : Product
+    public static class HtmlParserFactory
     {
-        public static IHtmlParser<TEntity> CreateInstance(IShop shop) 
+        public static IHtmlParser CreateInstance(IShop shop) 
         {
             switch (shop)
             {
                 case Shop1A _:
-                    return new HtmlParser1A<TEntity>();
+                    return new HtmlParser1A();
                 case null:
                     throw new ArgumentNullException();
                 default:

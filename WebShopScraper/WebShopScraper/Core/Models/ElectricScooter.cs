@@ -7,7 +7,7 @@ namespace WebShopScraper
 {
     public class ElectricScooter : Product
     {
-        public int Id { get; set; }
+        
     }
 
     public enum ProductCategory

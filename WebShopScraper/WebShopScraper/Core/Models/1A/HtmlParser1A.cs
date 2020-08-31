@@ -10,14 +10,14 @@ using WebShopScraper.Core.Models;
 
 namespace WebShopScraper.Models
 {
-    public class HtmlParser1A<TEntity> : IHtmlParser<TEntity> where TEntity : Product
+    public class HtmlParser1A : IHtmlParser
     {
-        private List<TEntity> _products;
+        private List<Product> _products;
         public HtmlParser1A()
         {
-            _products = new List<TEntity>();
+            _products = new List<Product>();
         }
-        public List<TEntity> GetProducts(string response)
+        public List<Product> GetProducts(string response)
         {
             var config = Configuration.Default;
             var context = BrowsingContext.New(config);
@@ -27,7 +27,7 @@ namespace WebShopScraper.Models
             var coll = document.GetElementsByClassName("catalog-taxons-product__hover");
             foreach(var a in coll)
             {
-                var product = new ElectricScooter()
+                var product = new Product()
                 {
                     Name = a.GetElementsByClassName("catalog-taxons-product__name").FirstOrDefault().InnerHtml.Trim(),
                     Price = decimal.Parse(a.GetElementsByClassName("catalog-taxons-product-price__item-price").FirstOrDefault().ChildNodes[1].TextContent.Replace(',','.')),

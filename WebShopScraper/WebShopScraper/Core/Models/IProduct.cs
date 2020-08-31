@@ -9,5 +9,7 @@
         string Name { get; set; }
         decimal Price { get; set; }
         ShopName Shop { get; set; }
+        public decimal TotalSum { get; set; }
+        public int TimesAdded { get; set; }
     }
 }

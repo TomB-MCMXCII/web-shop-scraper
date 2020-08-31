@@ -4,7 +4,7 @@ using WebShopScraper.Core.Models;
 
 namespace WebShopScraper
 {
-    public interface IRepository<TEntity> where TEntity : Product
+    public interface IRepository<TEntity>
     {
         void Create(TEntity entity);
         void Read(TEntity entity);

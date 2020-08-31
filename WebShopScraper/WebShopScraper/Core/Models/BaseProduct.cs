@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WebShopScraper.Core.Models
 {
-    public abstract class Product
+    public class Product : IProduct
     {
         public Product()
         {
@@ -18,5 +18,6 @@ namespace WebShopScraper.Core.Models
         public ShopName Shop { get; set; }
         public decimal TotalSum { get; set; }
         public int TimesAdded { get; set; }
+        public int Id { get; set; }
     }
 }
