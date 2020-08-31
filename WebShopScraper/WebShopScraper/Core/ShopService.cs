@@ -30,6 +30,7 @@ namespace WebShopScraper
         public void ScrapeScooters(List<IShop> shops)
         {
             IProductService<ElectricScooter> _productService = (IProductService<ElectricScooter>)_serviceProvider.GetService(typeof(IProductService<ElectricScooter>));
+
             var products = new List<ElectricScooter>();
             foreach(var a in shops)
             {
@@ -41,7 +42,7 @@ namespace WebShopScraper
                 while(nextPage)
                 {
                     var response = _client.GetPageHtmlContent(pageNumber);
-                    var parser = HtmlParserFactory.CreateInstance(a);
+                    var parser = HtmlParserFactory<ElectricScooter>.CreateInstance(a);
                     var parsedProducts = parser.GetProducts(response.Result);
                     if (parsedProducts.Count == 0)
                     { 

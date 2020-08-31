@@ -28,6 +28,7 @@ namespace WebShopScraper.Core
                 else
                 {
                     newProduct.TimesAdded++;
+                    newProduct.TotalSum = newProduct.Price;
                     _repository.Create(newProduct);
                 }
             }  
@@ -49,27 +50,22 @@ namespace WebShopScraper.Core
         {
             var relativeValue = decimal.Compare(foundProduct.Price, newProduct.Price);
 
-            var productTimesAdd = foundProduct.TimesAdded;
-            foundProduct.TotalSum =+ newProduct.Price;
-            
-            if (productTimesAdd != 0)
-            {
-                foundProduct.AvgPrice = foundProduct.TotalSum / productTimesAdd;
-            }
             if (relativeValue < 0)
             {
+                foundProduct.TotalSum += newProduct.Price;
                 foundProduct.TimesAdded++;
                 foundProduct.HighPrice = newProduct.Price;
                 foundProduct.Price = newProduct.Price;
-
+                foundProduct.AvgPrice = foundProduct.TotalSum / foundProduct.TimesAdded;
                 return foundProduct;
             }
             if (relativeValue > 0)
             {
+                foundProduct.TotalSum += newProduct.Price;
                 foundProduct.TimesAdded++;
                 foundProduct.LowPrice = newProduct.Price;
                 foundProduct.Price = newProduct.Price;
-
+                foundProduct.AvgPrice = foundProduct.TotalSum / foundProduct.TimesAdded;
                 return foundProduct;
             }
             else
@@ -78,6 +74,5 @@ namespace WebShopScraper.Core
             }
             
         }
-
     }
 }

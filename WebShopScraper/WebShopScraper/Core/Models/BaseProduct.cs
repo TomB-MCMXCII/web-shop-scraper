@@ -6,6 +6,10 @@ namespace WebShopScraper.Core.Models
 {
     public abstract class Product
     {
+        public Product()
+        {
+
+        }
         public decimal AvgPrice { get; set; }
         public decimal HighPrice { get; set; }
         public decimal LowPrice { get; set; }

@@ -64,66 +64,51 @@ namespace WebShopScraper.Test
         public void ComparePrice_Sets_highest_price_correctly()
         {
             //Arrange
-            ElectricScooter productOldPrice = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A };
-            ElectricScooter productNewPrice = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 350.56m, Shop = ShopName.Shop1A };
+            ElectricScooter productOld = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A, TotalSum = 220.56m };
+            ElectricScooter productNew = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 350.56m, Shop = ShopName.Shop1A };
 
             //Act
-            var comparedProdcut = _productService.ComparePrice(productOldPrice,productNewPrice);
-
+            var totalSum = productOld.TotalSum + productNew.Price;
+            var comparedProdcut = _productService.ComparePrice(productOld,productNew);
+            
             //Assert
-            Assert.IsTrue(comparedProdcut.HighPrice == productNewPrice.Price);
-            Assert.IsTrue(comparedProdcut.Price == productNewPrice.Price);
-            Assert.IsFalse(comparedProdcut.LowPrice == productNewPrice.Price);
+            Assert.IsTrue(comparedProdcut.HighPrice == productNew.Price);
+            Assert.IsTrue(comparedProdcut.Price == productNew.Price);
+            Assert.IsFalse(comparedProdcut.LowPrice == productNew.Price);
+            Assert.IsTrue(comparedProdcut.TotalSum == totalSum);
         }
         [TestMethod]
         public void ComparePrice_Sets_lowest_price_correctly()
         {
             //Arrange
-            ElectricScooter productOldPrice = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 420.56m, Shop = ShopName.Shop1A };
-            ElectricScooter productNewPrice = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 350.56m, Shop = ShopName.Shop1A };
+            ElectricScooter productOld = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 420.56m, Shop = ShopName.Shop1A, TotalSum = 420.56m };
+            ElectricScooter productNew = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 350.56m, Shop = ShopName.Shop1A };
 
             //Act
-            var comparedProdcut = _productService.ComparePrice(productOldPrice, productNewPrice);
+            var totalSum = productOld.TotalSum + productNew.Price;
+            var comparedProdcut = _productService.ComparePrice(productOld, productNew);
 
             //Assert
-            Assert.IsTrue(comparedProdcut.LowPrice == productNewPrice.Price);
-            Assert.IsTrue(comparedProdcut.Price == productNewPrice.Price);
-            Assert.IsFalse(comparedProdcut.HighPrice == productNewPrice.Price);
+            Assert.IsTrue(comparedProdcut.LowPrice == productNew.Price);
+            Assert.IsTrue(comparedProdcut.Price == productNew.Price);
+            Assert.IsFalse(comparedProdcut.HighPrice == productNew.Price);
+            Assert.IsTrue(comparedProdcut.TotalSum == totalSum);
         }
         [TestMethod]
         public void ComparePrice_sets_avgPrice_correctly()
         {
             //Arrange
-            ElectricScooter productOldPrice = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 420.56m, Shop = ShopName.Shop1A,TimesAdded = 1 };
+            ElectricScooter productOldPrice = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 420.56m, Shop = ShopName.Shop1A,TimesAdded = 1, TotalSum = 420.56m };
             ElectricScooter productNewPrice = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 350.56m, Shop = ShopName.Shop1A };
 
             //Act
-            var comparedProdcut = _productService.ComparePrice(productOldPrice, productNewPrice);
             var totalSum = productOldPrice.TotalSum + productNewPrice.Price;
+            var comparedProdcut = _productService.ComparePrice(productOldPrice, productNewPrice);
+            
             //Assert
             Assert.IsTrue(comparedProdcut.AvgPrice == totalSum / productOldPrice.TimesAdded);
+            Assert.IsTrue(comparedProdcut.TotalSum == totalSum);
         }
-      
-        //[TestMethod]
-        //public void SetHighPrice_Sets_new_high_price_if_current_price_is_higher()
-        //{
-        //    ElectricScooter product = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A };
-        //    var repoMock = new Mock<IRepository<Product>>();
-        //    var productServiceMock = new ProductService<Product>(repoMock.Object);
-        //    repoMock.Setup(x => x.ReadByName(It.IsAny<string>())).Returns(product);
-
-        //}
-        //[TestMethod]
-        //[DynamicData(nameof(GetDistinctProducts), DynamicDataSourceType.Method)]
-        //public void GetDistinctProducts_Returns_products_which_are_not_in_Db(IEnumerable<ElectricScooter> products)
-        //{
-        //    var productServiceMock = new Mock<IProductService<Product>>();
-        //    var actual = productServiceMock.Object.FilterProducts(products);
-        //    var expected = GetRepositoryProducts();
-
-        //    Assert.
-
-        //}
 
         public static IEnumerable<object[]> GetDistinctProducts()
         {

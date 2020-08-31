@@ -6,17 +6,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using WebShopScraper.Core.Models;
 
 namespace WebShopScraper.Models
 {
-    public class HtmlParser1A : IHtmlParser
+    public class HtmlParser1A<TEntity> : IHtmlParser<TEntity> where TEntity : Product
     {
-        private List<ElectricScooter> _products;
+        private List<TEntity> _products;
         public HtmlParser1A()
         {
-            _products = new List<ElectricScooter>();
+            _products = new List<TEntity>();
         }
-        public List<ElectricScooter> GetProducts(string response)
+        public List<TEntity> GetProducts(string response)
         {
             var config = Configuration.Default;
             var context = BrowsingContext.New(config);
@@ -35,8 +36,6 @@ namespace WebShopScraper.Models
                 _products.Add(product);
             }
 
-
-            
             return _products;
         }
     }

@@ -18,6 +18,7 @@ namespace WebShopScraper.Models
             Categories = new List<Category>();
         }
         public void SetBaseUrl() => BaseUrl = new Uri(_config.GetSection("1A:BaseUrl").Value.ToString());
+        //todo create exception 
         public void SetCategories()
         {
             foreach (var a in (ProductCategory[])Enum.GetValues(typeof(ProductCategory)))
