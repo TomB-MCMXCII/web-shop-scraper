@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using WebShopScraper.Models;
 
 namespace WebShopScraper
 {
@@ -19,9 +20,17 @@ namespace WebShopScraper
         {
             _path = path;
         }
-        public async Task<string> GetPageHtmlContent(int pageNumber)
+        public async Task<string> GetPageHtmlContent(int pageNumber,IShop shop)
         {
-            var response = await _client.GetAsync(_path + $"&page={pageNumber}");
+            HttpResponseMessage response;
+            if (shop.ShopName == ShopName.Shop1A)
+            {
+                response = await _client.GetAsync(_path + $"&page={pageNumber}");
+            }
+            else
+            {
+                response = await _client.GetAsync(_path + $"?page={pageNumber}");
+            }
             var taskString = response.Content.ReadAsStringAsync();
             taskString.Wait();
             return taskString.Result;

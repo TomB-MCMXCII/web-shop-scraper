@@ -22,8 +22,8 @@ namespace WebShopScraper.Models
             var config = Configuration.Default;
             var context = BrowsingContext.New(config);
             var parser = context.GetService<AngleSharp.Html.Parser.IHtmlParser>();
-            var source = response;
-            var document = parser.ParseDocument(source);
+
+            var document = parser.ParseDocument(response);
             var coll = document.GetElementsByClassName("catalog-taxons-product__hover");
             foreach(var a in coll)
             {

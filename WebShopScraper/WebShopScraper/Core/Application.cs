@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using WebShopScraper.Core.Models._220;
 using WebShopScraper.Models;
 using WebShopScraper.Models._1A;
 
@@ -26,6 +27,7 @@ namespace WebShopScraper
         public void SetupShops()
         {
             CreateShop(new Shop1ACreator(_config));
+            CreateShop(new Shop220Creator(_config));
         }
         public void StartScrape()
         {

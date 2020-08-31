@@ -11,7 +11,7 @@ namespace WebShopScraper.Models
         private readonly IConfiguration _config;
         public Uri BaseUrl { get; set; }
         public List<Category> Categories { get; set; }
-        public ShopName ShopName { get; private set; }
+        public ShopName ShopName => ShopName.Shop1A;
         public Shop1A(IConfiguration config)
         {
             _config = config;

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using WebShopScraper.Core;
 using WebShopScraper.Models;
@@ -11,12 +12,12 @@ using WebShopScraper.Models;
 namespace WebShopScraper
 {
     public class ShopService : IShopService
-    { 
-        private readonly IWebClient _client;
+    {
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly IServiceProvider _serviceProvider;
-        public ShopService(IWebClient client, IServiceProvider serviceProvider)
+        public ShopService(IServiceProvider serviceProvider,IHttpClientFactory httpClientFactory)
         {
-            _client = client;
+            _httpClientFactory = httpClientFactory;
             //_productService = productService;
             _serviceProvider = serviceProvider;
         }
@@ -35,6 +36,7 @@ namespace WebShopScraper
             var products = new List<ElectricScooter>();
             foreach(var a in shops)
             {
+                var _client = new WebClient(_httpClientFactory);
                 _client.SetBaseUri(a.BaseUrl);
                 _client.SetPath(a.Categories.Where(x => x.ProductCategory == ProductCategory.ElectricScooter).FirstOrDefault().Path);
 
@@ -42,7 +44,7 @@ namespace WebShopScraper
                 var nextPage = true;
                 while(nextPage)
                 {
-                    var response = _client.GetPageHtmlContent(pageNumber);
+                    var response = _client.GetPageHtmlContent(pageNumber,a);
                     var parser = HtmlParserFactory.CreateInstance(a);
                     var parsedProducts = parser.GetProducts(response.Result);
                    
@@ -65,7 +67,6 @@ namespace WebShopScraper
                     }   
                 }  
             }
-            
             _productService.SaveProducts(products);
         }
     }

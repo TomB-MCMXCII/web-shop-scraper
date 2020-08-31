@@ -8,7 +8,7 @@ namespace WebShopScraper
 {
     public interface IWebClient
     {
-        Task<string> GetPageHtmlContent(int pageNumber);
+        Task<string> GetPageHtmlContent(int pageNumber, IShop shop);
         void SetBaseUri(Uri baseUri);
         void SetPath(string path);
     }

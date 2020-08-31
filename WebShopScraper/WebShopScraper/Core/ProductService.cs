@@ -29,6 +29,8 @@ namespace WebShopScraper.Core
                 {
                     newProduct.TimesAdded++;
                     newProduct.TotalSum = newProduct.Price;
+                    newProduct.HighPrice = newProduct.Price;
+                    newProduct.LowPrice = newProduct.Price;
                     _repository.Create(newProduct);
                 }
             }  

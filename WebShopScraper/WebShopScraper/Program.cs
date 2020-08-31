@@ -37,7 +37,7 @@ namespace WebShopScraper
                 {
                     services.AddDbContext<WebShopScraperDbContext>(options =>
                        options.UseSqlServer("Server =.\\SQLEXPRESS; Database = Scraper; Trusted_Connection = True;"));
-                    services.AddScoped<IWebClient, WebClient>();
+                    services.AddTransient<IWebClient, WebClient>();
                     services.AddHttpClient();
                     services.AddScoped<IShopService, ShopService>();
                     services.AddScoped (typeof(IProductService<>), typeof(ProductService<>));
