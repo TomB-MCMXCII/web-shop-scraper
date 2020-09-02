@@ -1,11 +1,6 @@
 ﻿using AngleSharp;
-using HtmlAgilityPack;
-using RestSharp;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 using WebShopScraper.Core.Models;
 
 namespace WebShopScraper.Models
@@ -25,18 +20,30 @@ namespace WebShopScraper.Models
 
             var document = parser.ParseDocument(response);
             var coll = document.GetElementsByClassName("catalog-taxons-product__hover");
-            foreach(var a in coll)
+            foreach (var a in coll)
             {
-                var product = new Product()
+                try
                 {
-                    Name = a.GetElementsByClassName("catalog-taxons-product__name").FirstOrDefault().InnerHtml.Trim(),
-                    Price = decimal.Parse(a.GetElementsByClassName("catalog-taxons-product-price__item-price").FirstOrDefault().ChildNodes[1].TextContent.Replace(',','.')),
-                    Shop = ShopName.Shop1A
-                };
-                _products.Add(product);
-            }
+                    var product = new Product()
+                    {
+                        Name = a.GetElementsByClassName("catalog-taxons-product__name").FirstOrDefault().InnerHtml.Trim(),
+                        Price = decimal.Parse(MakeDecimalString(a.GetElementsByClassName("catalog-taxons-product-price__item-price").FirstOrDefault().ChildNodes[1].TextContent.Replace(".", ","))),
+                        Shop = ShopName.Shop1A
+                    };
+                    _products.Add(product);
+                }
+                catch
+                {
 
+                }
+            }
             return _products;
+        }
+
+        private string MakeDecimalString(string price)
+        {
+            var decimalString = price.Remove(price.Length - 3, 1).Insert(price.Length - 3, ".");
+            return decimalString;
         }
     }
 }

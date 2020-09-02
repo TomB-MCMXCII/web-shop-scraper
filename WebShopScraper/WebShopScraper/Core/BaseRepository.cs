@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using WebShopScraper.Core.Models;
 
@@ -14,9 +15,12 @@ namespace WebShopScraper.Core
             _context = context;
             _dbSet = context.Set<TEntity>();
         }
-        public void Create(TEntity product)
+        public void Create(IEnumerable<TEntity> products)
         {
-            _dbSet.Add(product);
+            foreach(var p in products)
+            {
+                _dbSet.Add(p);
+            }            
             _context.SaveChanges();
         }
         public void Read(TEntity entity)

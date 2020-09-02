@@ -7,6 +7,6 @@ namespace WebShopScraper.Core
     {
         void SaveProducts(IEnumerable<TEntity> products);
         public TEntity ComparePrice(TEntity product, TEntity newProduct);
-        TEntity ProductExists(TEntity product);
+        ServiceResult ProductExists(TEntity product);
     }
 }

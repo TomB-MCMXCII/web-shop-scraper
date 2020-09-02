@@ -1,6 +1,7 @@
 ﻿using AngleSharp;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using WebShopScraper.Models;
@@ -24,16 +25,21 @@ namespace WebShopScraper.Core.Models._220
             var coll = document.GetElementsByClassName("product-list-item tag-top");
             foreach (var a in coll)
             {
-                var g = a.GetElementsByClassName("product-name").FirstOrDefault().TextContent.Trim();
-                var p = a.GetElementsByClassName("price notranslate").FirstOrDefault().TextContent.Replace('€', ' ').Replace(',', '.').Replace(" ","").Trim();
+                var b = a.GetElementsByClassName("price notranslate").First().TextContent.Replace('€', ' ').Replace(',', '.').Replace(" ", "").Trim();
+                //try
+                //{
+                    var product = new Product()
+                    {
+                        Name = a.GetElementsByClassName("product-name").First().TextContent.Trim(),
+                        Price = decimal.Parse(a.GetElementsByClassName("price notranslate").First().TextContent.Replace('€', ' ').Replace(',', '.').Replace(" ", "").Trim()),
+                        Shop = ShopName.Shop220
+                    };
+                    _products.Add(product);
+                //}
+                //catch
+                //{
 
-                var product = new Product()
-                {
-                    Name = a.GetElementsByClassName("product-name").FirstOrDefault().TextContent.Trim(),
-                    Price = decimal.Parse(a.GetElementsByClassName("price notranslate").FirstOrDefault().TextContent.Replace('€', ' ').Replace(',', '.').Replace(" ", "").Trim()),
-                    Shop = ShopName.Shop220
-                };
-                _products.Add(product);
+                //}
             }
 
             return _products;

@@ -6,7 +6,7 @@ namespace WebShopScraper
 {
     public interface IRepository<TEntity>
     {
-        void Create(TEntity entity);
+        void Create(IEnumerable<TEntity> entity);
         void Read(TEntity entity);
         TEntity ReadByName(string name);
         void Read();

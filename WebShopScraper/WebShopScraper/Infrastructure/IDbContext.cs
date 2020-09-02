@@ -10,6 +10,7 @@ namespace WebShopScraper
     public interface IDbContext
     {
         DbSet<ElectricScooter> ElectricScooters { get; set; }
+        DbSet<Cpu> Cpus { get; set; }
         public int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
         DbSet<TEntity> Set<TEntity>() where TEntity : class;

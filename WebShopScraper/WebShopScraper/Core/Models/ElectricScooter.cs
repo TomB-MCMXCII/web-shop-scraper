@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using WebShopScraper.Core.Models;
+﻿using WebShopScraper.Core.Models;
 
 namespace WebShopScraper
 {
@@ -13,6 +10,7 @@ namespace WebShopScraper
     public enum ProductCategory
     {
         ElectricScooter,
+        Cpu
     }
     public enum ShopName
     {

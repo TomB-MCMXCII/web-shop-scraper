@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using WebShopScraper.Models;
@@ -25,7 +26,14 @@ namespace WebShopScraper
             HttpResponseMessage response;
             if (shop.ShopName == ShopName.Shop1A)
             {
-                response = await _client.GetAsync(_path + $"&page={pageNumber}");
+                if (_path.Contains('?'))
+                {
+                    response = await _client.GetAsync(_path + $"&page={pageNumber}");
+                }
+                else
+                {
+                    response = await _client.GetAsync(_path + $"?page={pageNumber}");
+                }
             }
             else
             {

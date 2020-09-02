@@ -28,7 +28,7 @@ namespace WebShopScraper.Core.Models._220
                 Categories.Add(new Category()
                 {
                     ProductCategory = a,
-                    Path = _config.GetSection($"220:CategoryPaths").GetSection($"{a}").Value
+                    Path = _config.GetSection($"220:CategoryPaths:{a}").Value.ToString()
                 });
             }
         }

@@ -33,7 +33,7 @@ namespace WebShopScraper
         {
             _service.ScrapeScooters(Shops);
             //_service.ScrapeLaptops(Shops);
-            //_service.ScrapeCpus(Shops);
+            _service.ScrapeCpus(Shops);
         }
         public void CreateShop(ShopCreator creator)
         {

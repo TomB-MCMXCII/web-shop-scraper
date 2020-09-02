@@ -9,6 +9,8 @@ namespace WebShopScraper
     public class WebShopScraperDbContext: DbContext, IDbContext
     {
         public DbSet<ElectricScooter> ElectricScooters { get; set; }
+        public DbSet<Cpu> Cpus { get; set; }
+
         public WebShopScraperDbContext(DbContextOptions<WebShopScraperDbContext> options ) : base(options)
         {
 

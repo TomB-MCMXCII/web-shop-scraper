@@ -1,13 +1,14 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using WebShopScraper.Core;
 using WebShopScraper.Core.Models;
 
 namespace WebShopScraper.Test
 {
     [TestClass]
-    public class ProductServiceTest
+    public class ProductServiceShould
     {
         private static Mock<IRepository<Product>> _repoMock;
         private static ProductService<Product> _productService;
@@ -18,22 +19,30 @@ namespace WebShopScraper.Test
             _repoMock = new Mock<IRepository<Product>>();
             _productService = new ProductService<Product>(_repoMock.Object);
         }
+
+        [DataTestMethod]
+        [DynamicData(nameof(GetProducts), DynamicDataSourceType.Method)]
+        public void save_products(IEnumerable<Product> products)
+        {
+            _productService.SaveProducts(products);
+            _repoMock.Verify(x => x.Create(products));
+        }
         [TestMethod]
-        public void ProductExists_Returns_Product_if_it_exists()
+        public void return_product_if_it_exists()
         {
             //Arrange
             var product = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A };
             _repoMock.Setup(_ => _.ReadByName(It.IsAny<string>())).Returns(product);
 
             //Act
-            var returnedProduct = _productService.ProductExists(product);
+            //var returnedProduct = _productService.ProductExists(product);
 
             //Assert
-            Assert.AreEqual(product, returnedProduct);
+            //Assert.AreEqual(product, returnedProduct);
         }
 
         [TestMethod]
-        public void ProductExists_Returns_null_if_product_does_not_exist()
+        public void should_return_false_if_product_does_not_exist()
         {
             //Arrange
             ElectricScooter product = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A };
@@ -41,10 +50,10 @@ namespace WebShopScraper.Test
             _repoMock.Setup(_ => _.ReadByName(It.IsAny<string>())).Returns(nullProduct);
 
             //Act
-            var returnedProduct = _productService.ProductExists(product);
+            var returnedValue = _productService.ProductExists(product);
 
             //Assert
-            Assert.IsNull(returnedProduct);
+            Assert.IsFalse(returnedValue._result);
         }
         [TestMethod]
         public void ProductExists_Returns_null_if_there_same_product_from_different_shops()
@@ -110,9 +119,9 @@ namespace WebShopScraper.Test
             Assert.IsTrue(comparedProdcut.TotalSum == totalSum);
         }
 
-        public static IEnumerable<object[]> GetDistinctProducts()
+        public static IEnumerable<object[]> GetProducts()
         {
-            yield return new object[] { new List<ElectricScooter>() { 
+            yield return new object[] { new List<Product>() { 
                 new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A }, 
                 new ElectricScooter() { Name = "Elektriskais skūteris Razor E100 Blue", Price = 341.08m, Shop = ShopName.Shop1A },
                 new ElectricScooter() { Name = "Elektr. skūteris Xiaomi Essential Lite", Price = 220.56m, Shop = ShopName.Shop1A },
