@@ -8,14 +8,14 @@ using WebShopScraper.Models;
 
 namespace WebShopScraper.Core.Models._220
 {
-    public class HtmlParser220 : IHtmlParser
+    public class HtmlParser220<TEntity> : IHtmlParser<TEntity> where TEntity : Product, new()
     {
-        private List<Product> _products;
+        private List<TEntity> _products;
         public HtmlParser220()
         {
-            _products = new List<Product>();
+            _products = new List<TEntity>();
         }
-        public List<Product> GetProducts(string response)
+        public List<TEntity> GetProducts(string response)
         {
             var config = Configuration.Default;
             var context = BrowsingContext.New(config);
@@ -28,7 +28,7 @@ namespace WebShopScraper.Core.Models._220
                 var b = a.GetElementsByClassName("price notranslate").First().TextContent.Replace('€', ' ').Replace(',', '.').Replace(" ", "").Trim();
                 //try
                 //{
-                    var product = new Product()
+                    var product = new TEntity()
                     {
                         Name = a.GetElementsByClassName("product-name").First().TextContent.Trim(),
                         Price = decimal.Parse(a.GetElementsByClassName("price notranslate").First().TextContent.Replace('€', ' ').Replace(',', '.').Replace(" ", "").Trim()),

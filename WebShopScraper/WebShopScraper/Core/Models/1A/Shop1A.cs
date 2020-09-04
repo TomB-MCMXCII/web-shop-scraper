@@ -2,7 +2,7 @@
 using RestSharp;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using WebShopScraper.Core.Models;
 
 namespace WebShopScraper.Models
 {

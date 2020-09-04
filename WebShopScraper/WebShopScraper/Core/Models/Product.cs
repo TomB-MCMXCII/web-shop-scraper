@@ -20,4 +20,15 @@ namespace WebShopScraper.Core.Models
         public int TimesAdded { get; set; }
         public int Id { get; set; }
     }
+    public enum ProductCategory
+    {
+        ElectricScooter,
+        Cpu
+    }
+    public enum ShopName
+    {
+        Shop1A,
+        Shop220,
+        ShopRDElectronics
+    }
 }

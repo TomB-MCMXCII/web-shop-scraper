@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
+using WebShopScraper.Core.Models;
 using WebShopScraper.Models;
 
 namespace WebShopScraper
 {
     public interface IShopService
     {
-        void ScrapeScooters(List<IShop> shops);
-        void ScrapeLaptops(List<IShop> shops);
-        void ScrapeCpus(List<IShop> shops);
+        void ScrapeShops<TEntity>(List<IShop> shops) where TEntity : Product, new();
     }
 }

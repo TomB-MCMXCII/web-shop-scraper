@@ -31,9 +31,8 @@ namespace WebShopScraper
         }
         public void StartScrape()
         {
-            _service.ScrapeScooters(Shops);
-            //_service.ScrapeLaptops(Shops);
-            _service.ScrapeCpus(Shops);
+            _service.ScrapeShops<ElectricScooter>(Shops);
+            _service.ScrapeShops<Cpu>(Shops);
         }
         public void CreateShop(ShopCreator creator)
         {

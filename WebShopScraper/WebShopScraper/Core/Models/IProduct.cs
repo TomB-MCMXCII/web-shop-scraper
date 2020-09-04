@@ -1,4 +1,6 @@
-﻿namespace WebShopScraper
+﻿using WebShopScraper.Core.Models;
+
+namespace WebShopScraper
 {
     public interface IProduct
     {

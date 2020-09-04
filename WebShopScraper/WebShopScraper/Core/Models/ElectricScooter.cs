@@ -7,15 +7,5 @@ namespace WebShopScraper
         
     }
 
-    public enum ProductCategory
-    {
-        ElectricScooter,
-        Cpu
-    }
-    public enum ShopName
-    {
-        Shop1A,
-        Shop220,
-        ShopRDElectronics
-    }
+   
 }
