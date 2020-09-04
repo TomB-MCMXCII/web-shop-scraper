@@ -17,10 +17,7 @@ namespace WebShopScraper.Core
         }
         public void Create(IEnumerable<TEntity> products)
         {
-            foreach(var p in products)
-            {
-                _dbSet.Add(p);
-            }            
+            _dbSet.AddRange(products);       
             _context.SaveChanges();
         }
         public void Read(TEntity entity)
@@ -28,9 +25,9 @@ namespace WebShopScraper.Core
             throw new NotImplementedException();
         }
 
-        public void Update(TEntity entity)
+        public void Update(IEnumerable<TEntity> entity)
         {
-            _dbSet.Update(entity);
+            _dbSet.UpdateRange(entity);
             _context.SaveChanges();
         }
 

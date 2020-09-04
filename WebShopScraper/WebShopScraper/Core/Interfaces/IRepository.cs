@@ -10,7 +10,7 @@ namespace WebShopScraper
         void Read(TEntity entity);
         TEntity ReadByName(string name);
         void Read();
-        void Update(TEntity entity);
+        void Update(IEnumerable<TEntity> entity);
         void Delete();
     }
 }

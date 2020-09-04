@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
+using System.Linq;
 using WebShopScraper.Core;
 using WebShopScraper.Core.Models;
 
@@ -13,160 +13,110 @@ namespace WebShopScraper.Test
         private static Mock<IRepository<Product>> _repoMock;
         private static ProductService<Product> _productService;
 
-        [ClassInitialize]
-        public static void Product(TestContext context)
+        [TestInitialize]
+        public void Product()
         {
             _repoMock = new Mock<IRepository<Product>>();
             _productService = new ProductService<Product>(_repoMock.Object);
         }
-
         [DataTestMethod]
         [DynamicData(nameof(GetProducts), DynamicDataSourceType.Method)]
         public void save_products(IEnumerable<Product> products)
         {
+            //Act
             _productService.SaveProducts(products);
-            _repoMock.Verify(x => x.Create(products));
+            //Assert
+            _repoMock.Verify(x => x.Create(It.IsAny<IEnumerable<Product>>()),Times.Once);
+
         }
-        [TestMethod]
-        public void return_product_if_it_exists()
+        [DataTestMethod]
+        [DynamicData(nameof(GetProducts), DynamicDataSourceType.Method)]
+        public void update_products(IEnumerable<Product> products)
+        {
+            //Act
+            _productService.SaveProducts(products);
+            //Assert
+            _repoMock.Verify(x => x.Update(It.IsAny<IEnumerable<Product>>()), Times.Once);
+
+        }
+
+        [DataTestMethod]
+        [DynamicData(nameof(GetProducts), DynamicDataSourceType.Method)]
+        public void save_products_which_do_not_exist(IEnumerable<Product> products)
         {
             //Arrange
-            var product = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A };
-            _repoMock.Setup(_ => _.ReadByName(It.IsAny<string>())).Returns(product);
-
+            var productCount = products.Count();
+            _repoMock.SetupSequence(x => x.ReadByName(It.IsAny<string>()))
+                .Returns(products.ElementAt(0))
+                .Returns((Product)null)
+                .Returns((Product)null)
+                .Returns(products.ElementAt(3))
+                .Returns((Product)null)
+                .Returns((Product)null)
+                .Returns((Product)null);
             //Act
-            //var returnedProduct = _productService.ProductExists(product);
-
+            _productService.SaveProducts(products);
             //Assert
-            //Assert.AreEqual(product, returnedProduct);
-        }
+            _repoMock.Verify(x => x.Create(It.Is<IEnumerable<Product>>(x => x.Count() == productCount - 2)), Times.Once);
+            _repoMock.Verify(x => x.Create(It.Is<IEnumerable<Product>>(x => x.Any(p =>
+            p.HighPrice.ToString() != string.Empty &&
+            p.LowPrice.ToString() != string.Empty &&
+            p.TotalSum.ToString() != string.Empty &&
+            p.TimesAdded == 1))));
+            _repoMock.Verify(x => x.ReadByName(It.IsAny<string>()), Times.Exactly(productCount));
 
-        [TestMethod]
-        public void should_return_false_if_product_does_not_exist()
+        }
+        [DataTestMethod]
+        [DynamicData(nameof(GetProducts), DynamicDataSourceType.Method)]
+        public void update_products_which_exist_in_db(IEnumerable<Product> products)
         {
             //Arrange
-            ElectricScooter product = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A };
-            ElectricScooter nullProduct = null;
-            _repoMock.Setup(_ => _.ReadByName(It.IsAny<string>())).Returns(nullProduct);
-
+            var productCount = products.Count();
+            _repoMock.SetupSequence(x => x.ReadByName(It.IsAny<string>()))
+                .Returns(new ElectricScooter() { 
+                    Name = "Elektriskais skūteris Blaupunkt ESC505", 
+                    Price = 550.56m,
+                    HighPrice = 550.56m,
+                    LowPrice = 550.56m,
+                    TimesAdded = 1,
+                    TotalSum = 550.56m,
+                    Shop = ShopName.Shop1A })
+                .Returns(new ElectricScooter(){
+                    Name = "Elektriskais skūteris Razor E100 Blue",
+                    Price = 110.56m,
+                    HighPrice = 110.56m,
+                    LowPrice = 110.56m,
+                    TimesAdded = 1,
+                    TotalSum = 110.56m,
+                    Shop = ShopName.Shop1A});
             //Act
-            var returnedValue = _productService.ProductExists(product);
-
-            //Assert
-            Assert.IsFalse(returnedValue._result);
-        }
-        [TestMethod]
-        public void ProductExists_Returns_null_if_there_same_product_from_different_shops()
-        {
-            //Arrange
-            ElectricScooter product1 = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A };
-            ElectricScooter product2 = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop220 };
-            _repoMock.Setup(_ => _.ReadByName(It.IsAny<string>())).Returns(product1);
-
-            //Act
-            var returnedProduct = _productService.ProductExists(product2);
-
-            //Assert
-            Assert.IsNull(returnedProduct);
-        }
-        [TestMethod]
-        public void ComparePrice_Sets_highest_price_correctly()
-        {
-            //Arrange
-            ElectricScooter productOld = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A, TotalSum = 220.56m };
-            ElectricScooter productNew = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 350.56m, Shop = ShopName.Shop1A };
-
-            //Act
-            var totalSum = productOld.TotalSum + productNew.Price;
-            var comparedProdcut = _productService.ComparePrice(productOld,productNew);
-            
-            //Assert
-            Assert.IsTrue(comparedProdcut.HighPrice == productNew.Price);
-            Assert.IsTrue(comparedProdcut.Price == productNew.Price);
-            Assert.IsFalse(comparedProdcut.LowPrice == productNew.Price);
-            Assert.IsTrue(comparedProdcut.TotalSum == totalSum);
-        }
-        [TestMethod]
-        public void ComparePrice_Sets_lowest_price_correctly()
-        {
-            //Arrange
-            ElectricScooter productOld = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 420.56m, Shop = ShopName.Shop1A, TotalSum = 420.56m };
-            ElectricScooter productNew = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 350.56m, Shop = ShopName.Shop1A };
-
-            //Act
-            var totalSum = productOld.TotalSum + productNew.Price;
-            var comparedProdcut = _productService.ComparePrice(productOld, productNew);
-
-            //Assert
-            Assert.IsTrue(comparedProdcut.LowPrice == productNew.Price);
-            Assert.IsTrue(comparedProdcut.Price == productNew.Price);
-            Assert.IsFalse(comparedProdcut.HighPrice == productNew.Price);
-            Assert.IsTrue(comparedProdcut.TotalSum == totalSum);
-        }
-        [TestMethod]
-        public void ComparePrice_sets_avgPrice_correctly()
-        {
-            //Arrange
-            ElectricScooter productOldPrice = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 420.56m, Shop = ShopName.Shop1A,TimesAdded = 1, TotalSum = 420.56m };
-            ElectricScooter productNewPrice = new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 350.56m, Shop = ShopName.Shop1A };
-
-            //Act
-            var totalSum = productOldPrice.TotalSum + productNewPrice.Price;
-            var comparedProdcut = _productService.ComparePrice(productOldPrice, productNewPrice);
-            
-            //Assert
-            Assert.IsTrue(comparedProdcut.AvgPrice == totalSum / productOldPrice.TimesAdded);
-            Assert.IsTrue(comparedProdcut.TotalSum == totalSum);
+            _productService.SaveProducts(products);
+            _repoMock.Verify(x => x.Update(It.Is<IEnumerable<Product>>(x => x.Count() == productCount - 5)), Times.Once);
+            _repoMock.Verify(x => x.Update(It.Is<IEnumerable<Product>>(x => 
+            x.ElementAt(0).Price == 220.56m &&
+            x.ElementAt(0).LowPrice == 220.56m &&
+            x.ElementAt(0).TotalSum == 550.56m + 220.56m &&
+            x.ElementAt(0).TimesAdded == 2 &&
+            x.ElementAt(0).AvgPrice == (550.56m + 220.56m) / 2)));
+            _repoMock.Verify(x => x.Update(It.Is<IEnumerable<Product>>(x =>
+            x.ElementAt(1).Price == 341.08m &&
+            x.ElementAt(1).HighPrice == 341.08m &&
+            x.ElementAt(1).TotalSum == 341.08m + 110.56m &&
+            x.ElementAt(1).TimesAdded == 2 &&
+            x.ElementAt(1).AvgPrice == (341.08m + 110.56m) / 2)));
         }
 
         public static IEnumerable<object[]> GetProducts()
         {
-            yield return new object[] { new List<Product>() { 
-                new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A }, 
-                new ElectricScooter() { Name = "Elektriskais skūteris Razor E100 Blue", Price = 341.08m, Shop = ShopName.Shop1A },
-                new ElectricScooter() { Name = "Elektr. skūteris Xiaomi Essential Lite", Price = 220.56m, Shop = ShopName.Shop1A },
-                new ElectricScooter() { Name = "Motus Electric Scooter Scooty 8.5 Turquoise", Price = 341.08m, Shop = ShopName.Shop1A },
-                new ElectricScooter() { Name = "Elektriskais skūteris Manta Saber MES605", Price = 156.25m, Shop = ShopName.Shop1A },
-                new ElectricScooter() { Name = "Fiat F10K350PL", Price = 156.25m, Shop = ShopName.Shop1A },
-                new ElectricScooter() { Name = "Fiat Electric Scooter F85K350PL Red", Price = 220.56m, Shop = ShopName.Shop1A },
+        yield return new object[] { new List<ElectricScooter>() { 
+            new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A }, 
+            new ElectricScooter() { Name = "Elektriskais skūteris Razor E100 Blue", Price = 341.08m, Shop = ShopName.Shop1A },
+            new ElectricScooter() { Name = "Elektr. skūteris Xiaomi Essential Lite", Price = 220.56m, Shop = ShopName.Shop1A },
+            new ElectricScooter() { Name = "Motus Electric Scooter Scooty 8.5 Turquoise", Price = 341.08m, Shop = ShopName.Shop1A },
+            new ElectricScooter() { Name = "Elektriskais skūteris Manta Saber MES605", Price = 156.25m, Shop = ShopName.Shop1A },
+            new ElectricScooter() { Name = "Fiat F10K350PL", Price = 156.25m, Shop = ShopName.Shop1A },
+            new ElectricScooter() { Name = "Fiat Electric Scooter F85K350PL Red", Price = 220.56m, Shop = ShopName.Shop1A },
             } };
-
-            //yield return new object[] { new List<ElectricScooter>() { 
-            //    new ElectricScooter() { Name = "Fiat F10K350PL", Price = 156.25m, Shop = ShopName.Shop1A }, 
-            //    new ElectricScooter() { Name = "Elektr. skūteris Xiaomi Essential Lite", Price = 809.72m, Shop = ShopName.Shop1A },
-            //    new ElectricScooter() { Name = "Fiat Electric Scooter F85K350PL Red", Price = 220.56m, Shop = ShopName.Shop1A },
-            //    new ElectricScooter() { Name = "Motus Electric Scooter Scooty 8.5 Turquoise", Price = 341.08m, Shop = ShopName.Shop1A }
-            //} };
-            //yield return new object[] { new List<ElectricScooter>() { 
-            //    new ElectricScooter() { Name = "Motus Electric Scooter Scooty 8.5 Turquoise", Price = 56.63m, Shop = ShopName.Shop1A }, 
-            //    new ElectricScooter() { Name = "Elektriskais skūteris Razor E100 Blue", Price = 409.47m, Shop = ShopName.Shop1A } ,
-            //    new ElectricScooter() { Name = "Elektr. skūteris Xiaomi Essential Lite", Price = 220.56m, Shop = ShopName.Shop1A },
-            //    new ElectricScooter() { Name = "Motus Electric Scooter Scooty 8.5 Turquoise", Price = 341.08m, Shop = ShopName.Shop1A }
-            //} };
         }
-        public static IEnumerable<object[]> GetRepositoryProducts()
-        {
-            yield return new object[] { new List<ElectricScooter>() {
-                new ElectricScooter() { Name = "Elektriskais skūteris Blaupunkt ESC505", Price = 220.56m, Shop = ShopName.Shop1A },
-                new ElectricScooter() { Name = "Elektr. skūteris Xiaomi Essential Lite", Price = 220.56m, Shop = ShopName.Shop1A },
-                new ElectricScooter() { Name = "Elektriskais skūteris Manta Saber MES605", Price = 156.25m, Shop = ShopName.Shop1A },
-                new ElectricScooter() { Name = "BMW F10K350PL", Price = 156.25m, Shop = ShopName.Shop1A },
-                new ElectricScooter() { Name = "Owermax Electric Scooter X-roister 30", Price = 220.56m, Shop = ShopName.Shop1A },
-            } };
-
-            //yield return new object[] { new List<ElectricScooter>() { 
-            //    new ElectricScooter() { Name = "Fiat F10K350PL", Price = 156.25m, Shop = ShopName.Shop1A }, 
-            //    new ElectricScooter() { Name = "Elektr. skūteris Xiaomi Essential Lite", Price = 809.72m, Shop = ShopName.Shop1A },
-            //    new ElectricScooter() { Name = "Fiat Electric Scooter F85K350PL Red", Price = 220.56m, Shop = ShopName.Shop1A },
-            //    new ElectricScooter() { Name = "Motus Electric Scooter Scooty 8.5 Turquoise", Price = 341.08m, Shop = ShopName.Shop1A }
-            //} };
-            //yield return new object[] { new List<ElectricScooter>() { 
-            //    new ElectricScooter() { Name = "Motus Electric Scooter Scooty 8.5 Turquoise", Price = 56.63m, Shop = ShopName.Shop1A }, 
-            //    new ElectricScooter() { Name = "Elektriskais skūteris Razor E100 Blue", Price = 409.47m, Shop = ShopName.Shop1A } ,
-            //    new ElectricScooter() { Name = "Elektr. skūteris Xiaomi Essential Lite", Price = 220.56m, Shop = ShopName.Shop1A },
-            //    new ElectricScooter() { Name = "Motus Electric Scooter Scooty 8.5 Turquoise", Price = 341.08m, Shop = ShopName.Shop1A }
-            //} };
-        }
-
     }
 }
