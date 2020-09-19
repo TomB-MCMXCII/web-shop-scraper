@@ -9,7 +9,7 @@ namespace WebShopScraper
         void Create(IEnumerable<TEntity> entity);
         void Read(TEntity entity);
         TEntity ReadByName(string name);
-        void Read();
+        IEnumerable<TEntity> Read();
         void Update(IEnumerable<TEntity> entity);
         void Delete();
     }

@@ -1,11 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using RestSharp;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using WebShopScraper.Core;
 using WebShopScraper.Core.Models;
 using WebShopScraper.Models;
@@ -23,11 +19,13 @@ namespace WebShopScraper
         }
         public void ScrapeShops<TEntity>(List<IShop> shops) where TEntity : Product, new()
         {
+            // todo test if this is disposed
             IProductService<TEntity> _productService = (IProductService<TEntity>)_serviceProvider.GetService(typeof(IProductService<TEntity>));
 
             var products = new List<TEntity>();
             foreach (var a in shops)
             {
+                //todo put url setting in web client class.
                 var _client = new WebClient(_httpClientFactory);
                 _client.SetBaseUri(a.BaseUrl);
                 
@@ -40,7 +38,6 @@ namespace WebShopScraper
                         _client.SetPath(a.Categories.Where(x => x.ProductCategory == ProductCategory.Cpu).FirstOrDefault().Path);
                         break;
                 }
-               
 
                 var pageNumber = 1;
                 var nextPage = true;
@@ -48,6 +45,7 @@ namespace WebShopScraper
                 {
                     var response = _client.GetPageHtmlContent(pageNumber, a);
                     var parser = HtmlParserFactory.CreateInstance<TEntity>(a);
+                    //todo 
                     var parsedProducts = parser.GetProducts(response.Result);
 
                     if (parsedProducts.Count == 0)
@@ -56,6 +54,7 @@ namespace WebShopScraper
                     }
                     else
                     {
+                        //todo this is redundant as get products allready returns new list with type TEntity
                         foreach (var c in parsedProducts)
                         {
                             products.Add(new TEntity()
@@ -71,49 +70,5 @@ namespace WebShopScraper
             }
             _productService.SaveProducts(products);
         }
-        //public void ScrapeLaptops(List<IShop> shops)
-        //{
-        //    throw new NotImplementedException();
-        //}
-        //public void ScrapeScooters(List<IShop> shops)
-        //{
-        //    IProductService<ElectricScooter> _productService = (IProductService<ElectricScooter>)_serviceProvider.GetService(typeof(IProductService<ElectricScooter>));
-
-        //    var products = new List<ElectricScooter>();
-        //    foreach(var a in shops)
-        //    {
-        //        var _client = new WebClient(_httpClientFactory);
-        //        _client.SetBaseUri(a.BaseUrl);
-        //        _client.SetPath(a.Categories.Where(x => x.ProductCategory == ProductCategory.ElectricScooter).FirstOrDefault().Path);
-
-        //        var pageNumber = 1;
-        //        var nextPage = true;
-        //        while(nextPage)
-        //        {
-        //            var response = _client.GetPageHtmlContent(pageNumber,a);
-        //            var parser = HtmlParserFactory.CreateInstance<ElectricScooter>(a);
-        //            var parsedProducts = parser.GetProducts(response.Result);
-                   
-        //            if (parsedProducts.Count == 0)
-        //            { 
-        //                nextPage = false;
-        //            }
-        //            else 
-        //            {
-        //                foreach (var c in parsedProducts)
-        //                {
-        //                    products.Add(new ElectricScooter()
-        //                    {
-        //                        Name = c.Name,
-        //                        Price = c.Price,
-        //                        Shop = c.Shop,
-        //                    });
-        //                }
-        //                pageNumber++; 
-        //            }   
-        //        }  
-        //    }
-        //    _productService.SaveProducts(products);
-        //}
     }
 }

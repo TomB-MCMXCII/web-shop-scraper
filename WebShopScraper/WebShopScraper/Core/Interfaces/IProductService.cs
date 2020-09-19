@@ -6,5 +6,6 @@ namespace WebShopScraper.Core
     public interface IProductService<TEntity> where TEntity : Product
     {
         void SaveProducts(IEnumerable<TEntity> products);
+        IEnumerable<TEntity> GetProducts();
     }
 }

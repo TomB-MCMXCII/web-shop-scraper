@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using WebShopScraper.Core.Models;
+using System;
 
 namespace WebShopScraper.Core
 {
@@ -10,6 +11,12 @@ namespace WebShopScraper.Core
         public ProductService(IRepository<TEntity> repository)
         {
             _repository = repository;
+        }
+
+        public IEnumerable<TEntity> GetProducts()
+        {
+            _repository.Read();
+            return new List<TEntity>();
         }
 
         public void SaveProducts(IEnumerable<TEntity> products)

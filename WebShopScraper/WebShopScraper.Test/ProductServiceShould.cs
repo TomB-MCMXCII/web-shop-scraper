@@ -2,6 +2,7 @@
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using WebShopScraper.Core;
 using WebShopScraper.Core.Models;
 
@@ -19,6 +20,7 @@ namespace WebShopScraper.Test
             _repoMock = new Mock<IRepository<Product>>();
             _productService = new ProductService<Product>(_repoMock.Object);
         }
+
         [DataTestMethod]
         [DynamicData(nameof(GetProducts), DynamicDataSourceType.Method)]
         public void save_products(IEnumerable<Product> products)
@@ -29,6 +31,7 @@ namespace WebShopScraper.Test
             _repoMock.Verify(x => x.Create(It.IsAny<IEnumerable<Product>>()),Times.Once);
 
         }
+
         [DataTestMethod]
         [DynamicData(nameof(GetProducts), DynamicDataSourceType.Method)]
         public void update_products(IEnumerable<Product> products)
@@ -91,6 +94,7 @@ namespace WebShopScraper.Test
                     Shop = ShopName.Shop1A});
             //Act
             _productService.SaveProducts(products);
+            //Assert
             _repoMock.Verify(x => x.Update(It.Is<IEnumerable<Product>>(x => x.Count() == productCount - 5)), Times.Once);
             _repoMock.Verify(x => x.Update(It.Is<IEnumerable<Product>>(x => 
             x.ElementAt(0).Price == 220.56m &&
@@ -105,7 +109,13 @@ namespace WebShopScraper.Test
             x.ElementAt(1).TimesAdded == 2 &&
             x.ElementAt(1).AvgPrice == (341.08m + 110.56m) / 2)));
         }
-
+        [TestMethod]
+        public void return_all_products_of_same_type()
+        {
+            _repoMock.Setup(x => x.Read()).Returns(It.IsAny<IEnumerable<ElectricScooter>>());
+            _productService.GetProducts();
+            _repoMock.Verify(x => x.Read(), Times.Once);
+        }
         public static IEnumerable<object[]> GetProducts()
         {
         yield return new object[] { new List<ElectricScooter>() { 

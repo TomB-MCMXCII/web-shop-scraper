@@ -42,9 +42,14 @@ namespace WebShopScraper.Core
             return product;
         }
 
-        public void Read()
+        public IEnumerable<TEntity> Read()
         {
             throw new NotImplementedException();
         }
+
+        //public IEnumerable<TEntity> Read()
+        //{
+        //    _dbSet.
+        //}
     }
 }

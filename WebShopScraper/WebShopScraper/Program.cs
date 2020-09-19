@@ -29,7 +29,7 @@ namespace WebShopScraper
             var controller = ActivatorUtilities.CreateInstance<Application>(host.Services);
             controller.StartApplication();
         }
-
+        //Method with this exact signature is called when adding new migration
         public static IHostBuilder CreateHostBuilder(string[] args) 
         {
             var host = Host.CreateDefaultBuilder(args)
