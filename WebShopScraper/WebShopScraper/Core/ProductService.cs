@@ -15,8 +15,7 @@ namespace WebShopScraper.Core
 
         public IEnumerable<TEntity> GetProducts()
         {
-            _repository.Read();
-            return new List<TEntity>();
+            return _repository.Read();
         }
 
         public void SaveProducts(IEnumerable<TEntity> products)

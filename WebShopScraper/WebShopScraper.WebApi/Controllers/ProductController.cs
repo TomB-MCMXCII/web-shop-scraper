@@ -14,7 +14,7 @@ namespace WebShopScraper.WebApi.Controllers
     public class ProductController : ControllerBase
     {
         //private readonly IProductService _productService; 
-        public ProductController()
+        public ProductController(IProductProcessor productProcessor)
         {
 
         }

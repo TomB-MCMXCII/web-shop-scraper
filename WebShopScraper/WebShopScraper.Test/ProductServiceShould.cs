@@ -109,12 +109,21 @@ namespace WebShopScraper.Test
             x.ElementAt(1).TimesAdded == 2 &&
             x.ElementAt(1).AvgPrice == (341.08m + 110.56m) / 2)));
         }
-        [TestMethod]
-        public void return_all_products_of_same_type()
+        [DataTestMethod]
+        [DynamicData(nameof (GetProducts), DynamicDataSourceType.Method)]
+        public void return_all_products_of_same_type(IEnumerable<Product> products)
         {
-            _repoMock.Setup(x => x.Read()).Returns(It.IsAny<IEnumerable<ElectricScooter>>());
-            _productService.GetProducts();
+            // Arrange
+            _repoMock.Setup(x => x.Read()).Returns(products);
+            // Act
+            var repoProducts = _productService.GetProducts();
+            //Assert
             _repoMock.Verify(x => x.Read(), Times.Once);
+            Assert.AreEqual(repoProducts.Count(), 7);
+            foreach(var p in repoProducts)
+            {
+                Assert.AreEqual(typeof(ElectricScooter), p.GetType());
+            }           
         }
         public static IEnumerable<object[]> GetProducts()
         {
