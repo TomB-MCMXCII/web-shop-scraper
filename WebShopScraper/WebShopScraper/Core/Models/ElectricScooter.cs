@@ -4,8 +4,8 @@ namespace WebShopScraper
 {
     public class ElectricScooter : Product
     {
-        
+       
     }
 
-   
+
 }

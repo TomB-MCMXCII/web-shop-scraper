@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using WebShopScraper.Core.Models;
 
 namespace WebShopScraper.Core
@@ -44,7 +45,9 @@ namespace WebShopScraper.Core
 
         public IEnumerable<TEntity> Read()
         {
-            throw new NotImplementedException();
+            var dbset = _dbSet.ToList();
+
+            return dbset;
         }
 
         //public IEnumerable<TEntity> Read()

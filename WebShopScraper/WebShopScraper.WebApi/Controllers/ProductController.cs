@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,20 +14,31 @@ namespace WebShopScraper.WebApi.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        //private readonly IProductService _productService; 
-        public ProductController(IProductProcessor productProcessor)
+        private readonly TypedProductServiceFactory typedProductServiceFactory;
+        private readonly IServiceProvider _serviceProvider;
+        public ProductController(IServiceProvider serviceProvider)
         {
-
+            _serviceProvider = serviceProvider;
+            typedProductServiceFactory = new TypedProductServiceFactory(_serviceProvider);
         }
+        //private readonly IProductService _productService; 
         /// <summary>
         /// Returns all product of given type
         /// </summary>
         /// <param name="productType">The type of product</param>
         [HttpGet]
-        [Route("")]
-        public void GetProducts(ProductType productType)
+        [Route("getproducts")]
+        public IActionResult GetProducts(ProductType productType)
         {
-
+            switch (productType)
+            {
+                case ProductType.Cpu:
+                    var service =  (IProductService<Cpu>)
+                    _serviceProvider.GetService(typeof(IProductService<Cpu>));
+                    return Ok(service.GetProducts());
+                default:
+                    return NotFound();
+            }
         }
         /// <summary>
         /// 

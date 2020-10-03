@@ -7,21 +7,22 @@ using WebShopScraper.Core.Models;
 
 namespace WebShopScraper.WebApi
 {
-    public class ProductProcessor<TEntity> where TEntity : Product
+    public class ProductProcessor<TEntity> : IProductProcessor<TEntity> where TEntity : Product
     {
         private readonly IProductService<TEntity> _productService;
         public ProductProcessor(IProductService<TEntity> productService)
         {
             _productService = productService;
         }
-        public void GetProducts()
+
+        public IEnumerable<TEntity> GetLargestPriceDifferenceProducts()
         {
-            _productService.GetProducts();
-        }
-        public void GetLargestPriceDifferenceProducts()
-        {
-            GetProducts();
+            throw new NotImplementedException();
         }
 
+        public IEnumerable<TEntity> GetProducts()
+        {
+            return _productService.GetProducts();
+        }
     }
 }

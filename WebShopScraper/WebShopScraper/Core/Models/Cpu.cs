@@ -4,6 +4,6 @@ namespace WebShopScraper
 {
     public class Cpu : Product
     {
-
+       
     }
 }

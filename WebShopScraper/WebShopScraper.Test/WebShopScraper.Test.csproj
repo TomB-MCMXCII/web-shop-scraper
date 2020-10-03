@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\WebShopScraper.WebApi\WebShopScraper.WebApi.csproj" />
     <ProjectReference Include="..\WebShopScraper\WebShopScraper.csproj" />
   </ItemGroup>
 
