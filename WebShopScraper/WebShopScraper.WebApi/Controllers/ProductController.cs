@@ -14,12 +14,10 @@ namespace WebShopScraper.WebApi.Controllers
     [ApiController]
     public class ProductController : ControllerBase
     {
-        private readonly TypedProductServiceFactory typedProductServiceFactory;
         private readonly IServiceProvider _serviceProvider;
         public ProductController(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
-            typedProductServiceFactory = new TypedProductServiceFactory(_serviceProvider);
         }
         //private readonly IProductService _productService; 
         /// <summary>

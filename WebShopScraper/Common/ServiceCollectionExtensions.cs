@@ -8,7 +8,7 @@ namespace Common
 {
     public static class ServiceCollectionExtensions
     {
-        public static void AddServices(this IServiceCollection services, IConfiguration Configuration)
+        public static void AddServices(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<WebShopScraperDbContext>(options =>
                         options.UseSqlServer("Server =.\\SQLEXPRESS; Database = Scraper; Trusted_Connection = True;"));

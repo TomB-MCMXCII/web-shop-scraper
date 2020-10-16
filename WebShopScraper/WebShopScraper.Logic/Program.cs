@@ -8,7 +8,7 @@ using System.IO;
 using Microsoft.EntityFrameworkCore;
 using WebShopScraper.Core;
 
-namespace WebShopScraper
+namespace WebShopScraper.Logic
 {
     class Program
     {
@@ -35,14 +35,7 @@ namespace WebShopScraper
             var host = Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddDbContext<WebShopScraperDbContext>(options =>
-                        options.UseSqlServer("Server =.\\SQLEXPRESS; Database = Scraper; Trusted_Connection = True;"));
-                    services.AddTransient<IWebClient, WebClient>();
-                    services.AddHttpClient();
-                    services.AddScoped<IShopService, ShopService>();
-                    services.AddScoped(typeof(IProductService<>), typeof(ProductService<>));
-                    services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
-                    services.AddScoped<IDbContext, WebShopScraperDbContext>();
+                    services.AddServices();
                 });
 
             return host;

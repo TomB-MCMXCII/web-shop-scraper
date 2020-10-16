@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebShopScraper.Test", "WebS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebShopScraper.WebApi", "WebShopScraper.WebApi\WebShopScraper.WebApi.csproj", "{F24A8702-D379-4CE4-9A42-DD39DB28E73D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{91B41464-1870-4CA7-AA0E-0AB391D2D148}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,10 +27,6 @@ Global
 		{F24A8702-D379-4CE4-9A42-DD39DB28E73D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F24A8702-D379-4CE4-9A42-DD39DB28E73D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F24A8702-D379-4CE4-9A42-DD39DB28E73D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{91B41464-1870-4CA7-AA0E-0AB391D2D148}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{91B41464-1870-4CA7-AA0E-0AB391D2D148}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{91B41464-1870-4CA7-AA0E-0AB391D2D148}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{91B41464-1870-4CA7-AA0E-0AB391D2D148}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
