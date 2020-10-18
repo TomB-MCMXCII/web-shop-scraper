@@ -36,7 +36,7 @@ namespace WebShopScraper
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddDbContext<WebShopScraperDbContext>(options =>
-                        options.UseSqlServer("Server =.\\SQLEXPRESS; Database = Scraper; Trusted_Connection = True;"));
+                        options.UseSqlServer("Server=tcp:scrapertomb.database.windows.net,1433;Initial Catalog=Scraper;Persist Security Info=False;User ID=tomb;Password=pendulum08!@#;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));
                     services.AddTransient<IWebClient, WebClient>();
                     services.AddHttpClient();
                     services.AddScoped<IShopService, ShopService>();
