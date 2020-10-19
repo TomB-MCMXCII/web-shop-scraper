@@ -19,6 +19,7 @@ namespace WebShopScraper.Core.Models
         public decimal TotalSum { get; set; }
         public int TimesAdded { get; set; }
         public int Id { get; set; }
+        public string Url { get; set; }
     }
     public enum ProductCategory
     {

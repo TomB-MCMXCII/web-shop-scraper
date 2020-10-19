@@ -27,15 +27,15 @@ namespace WebShopScraper.Core.Models._220
             _productElements = document.GetElementsByClassName("product-list-item tag-top");
             foreach (var a in _productElements)
             {
-                var b = a.GetElementsByClassName("price notranslate").First().TextContent.Replace('€', ' ').Replace(',', '.').Replace(" ", "").Trim();
                 try
                 {
                     var product = new TEntity()
                     {
                         Name = a.GetElementsByClassName("product-name").First().TextContent.Trim(),
                         Price = decimal.Parse(a.GetElementsByClassName("price notranslate").First().TextContent.Replace('€', ' ').Replace(',', '.').Replace(" ", "").Trim()),
-                        Shop = ShopName.Shop220
-                    };
+                        Shop = ShopName.Shop220,
+                        Url = a.GetElementsByClassName("cover-link").FirstOrDefault().GetAttribute("href")
+                };
                     
                     _products.Add(product);
                 }

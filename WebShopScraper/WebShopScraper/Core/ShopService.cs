@@ -8,6 +8,7 @@ using WebShopScraper.Models;
 
 namespace WebShopScraper
 {
+    // todo rename class
     public class ShopService : IShopService 
     {
         private readonly IHttpClientFactory _httpClientFactory;
@@ -47,6 +48,7 @@ namespace WebShopScraper
                     var parser = HtmlParserFactory.CreateInstance<TEntity>(a);
                     //todo 
                     var parsedProducts = parser.GetProducts(response.Result);
+                    products.AddRange(parsedProducts);
 
                     if (parsedProducts.Count == 0)
                     {
@@ -54,16 +56,7 @@ namespace WebShopScraper
                     }
                     else
                     {
-                        //todo this is redundant as get products allready returns new list with type TEntity
-                        foreach (var c in parsedProducts)
-                        {
-                            products.Add(new TEntity()
-                            {
-                                Name = c.Name,
-                                Price = c.Price,
-                                Shop = c.Shop,
-                            });
-                        }
+                       
                         pageNumber++;
                     }
                 }
