@@ -22,13 +22,15 @@ namespace WebShopScraper.Models
             var coll = document.GetElementsByClassName("catalog-taxons-product__hover");
             foreach (var a in coll)
             {
+                var g = a.GetElementsByClassName("catalog-taxons-product__name").FirstOrDefault().GetAttribute("href");
                 try
                 {
                     var product = new TEntity()
                     {
                         Name = a.GetElementsByClassName("catalog-taxons-product__name").FirstOrDefault().InnerHtml.Trim(),
                         Price = decimal.Parse(MakeDecimalString(a.GetElementsByClassName("catalog-taxons-product-price__item-price").FirstOrDefault().ChildNodes[1].TextContent.Replace(".", ","))),
-                        Shop = ShopName.Shop1A
+                        Shop = ShopName.Shop1A,
+                        Url = "https://www.1a.lv" + a.GetElementsByClassName("catalog-taxons-product__name").FirstOrDefault().GetAttribute("href")
                     };
                     _products.Add(product);
                 }

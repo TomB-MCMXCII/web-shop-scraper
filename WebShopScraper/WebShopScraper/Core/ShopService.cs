@@ -9,11 +9,11 @@ using WebShopScraper.Models;
 namespace WebShopScraper
 {
     // todo rename class
-    public class ShopService : IShopService 
+    public class Scraper : IScraper 
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IServiceProvider _serviceProvider;
-        public ShopService(IServiceProvider serviceProvider,IHttpClientFactory httpClientFactory)
+        public Scraper(IServiceProvider serviceProvider,IHttpClientFactory httpClientFactory)
         {
             _httpClientFactory = httpClientFactory;
             _serviceProvider = serviceProvider;

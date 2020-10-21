@@ -20,6 +20,9 @@ namespace WebShopScraper.Core.Models
         public int TimesAdded { get; set; }
         public int Id { get; set; }
         public string Url { get; set; }
+        public decimal HighLowPriceDiff { get; set; }
+        public DateTime HighPriceDate { get; set; }
+        public DateTime LowPriceDate { get; set; }
     }
     public enum ProductCategory
     {

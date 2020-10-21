@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebShopScraper;
 
 namespace WebShopScraper.Migrations
 {
     [DbContext(typeof(WebShopScraperDbContext))]
-    partial class WebShopScraperDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201020164738_NewProperties")]
+    partial class NewProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

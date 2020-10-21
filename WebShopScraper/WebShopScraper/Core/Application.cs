@@ -11,28 +11,28 @@ namespace WebShopScraper
     public class Application
     {
         private readonly IConfiguration _config;
-        private readonly IShopService _service;
+        private readonly IScraper _scraper;
         public List<IShop> Shops;
-        public Application(IConfiguration config,IShopService service)
+        public Application(IConfiguration config,IScraper scraper)
         {
             _config = config;
-            _service = service;
+            _scraper = scraper;
             Shops = new List<IShop>();
         }
         public void StartApplication()
         {
-            SetupShops();
+            InitializeShops();
             StartScrape();
         }
-        public void SetupShops()
+        public void InitializeShops()
         {
             CreateShop(new Shop1ACreator(_config));
             CreateShop(new Shop220Creator(_config));
         }
         public void StartScrape()
         {
-            _service.ScrapeShops<ElectricScooter>(Shops);
-            _service.ScrapeShops<Cpu>(Shops);
+            _scraper.ScrapeShops<ElectricScooter>(Shops);
+            _scraper.ScrapeShops<Cpu>(Shops);
         }
         public void CreateShop(ShopCreator creator)
         {

@@ -4,7 +4,7 @@ using WebShopScraper.Models;
 
 namespace WebShopScraper
 {
-    public interface IShopService
+    public interface IScraper
     {
         void ScrapeShops<TEntity>(List<IShop> shops) where TEntity : Product, new();
     }

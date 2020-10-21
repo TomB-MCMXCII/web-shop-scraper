@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
@@ -51,23 +52,26 @@ namespace WebShopScraper.Test
             var productCount = products.Count();
             _repoMock.SetupSequence(x => x.ReadByName(It.IsAny<string>()))
                 .Returns(products.ElementAt(0))
-                .Returns((Product)null)
-                .Returns((Product)null)
-                .Returns(products.ElementAt(3))
-                .Returns((Product)null)
-                .Returns((Product)null)
-                .Returns((Product)null);
+                .Returns(products.ElementAt(3));
             //Act
             _productService.SaveProducts(products);
             //Assert
-            _repoMock.Verify(x => x.Create(It.Is<IEnumerable<Product>>(x => x.Count() == productCount - 2)), Times.Once);
+            _repoMock.Verify(x => x.Create(It.Is<IEnumerable<Product>>(x => x.Count() == productCount - 2)), Times.Once); 
+            _repoMock.Verify(x => x.ReadByName(It.IsAny<string>()), Times.Exactly(productCount));
+
+        }
+        [DataTestMethod]
+        [DynamicData(nameof(GetProducts), DynamicDataSourceType.Method)]
+        public void set_properties_when_creating(IEnumerable<Product> products)
+        {
+            // Act
+            _productService.SaveProducts(products);
+            // Assert
             _repoMock.Verify(x => x.Create(It.Is<IEnumerable<Product>>(x => x.Any(p =>
             p.HighPrice.ToString() != string.Empty &&
             p.LowPrice.ToString() != string.Empty &&
             p.TotalSum.ToString() != string.Empty &&
             p.TimesAdded == 1))));
-            _repoMock.Verify(x => x.ReadByName(It.IsAny<string>()), Times.Exactly(productCount));
-
         }
         [DataTestMethod]
         [DynamicData(nameof(GetProducts), DynamicDataSourceType.Method)]
@@ -96,7 +100,38 @@ namespace WebShopScraper.Test
             _productService.SaveProducts(products);
             //Assert
             _repoMock.Verify(x => x.Update(It.Is<IEnumerable<Product>>(x => x.Count() == productCount - 5)), Times.Once);
-            _repoMock.Verify(x => x.Update(It.Is<IEnumerable<Product>>(x => 
+            _repoMock.Verify(x => x.ReadByName(It.IsAny<string>()), Times.Exactly(productCount));
+        }
+        [DataTestMethod]
+        [DynamicData(nameof(GetProducts), DynamicDataSourceType.Method)]
+        public void update_properties_when_updating(IEnumerable<Product> products)
+        {
+            // Arrange
+            _repoMock.SetupSequence(x => x.ReadByName(It.IsAny<string>()))
+                .Returns(new ElectricScooter()
+                {
+                    Name = "Elektriskais skūteris Blaupunkt ESC505",
+                    Price = 550.56m,
+                    HighPrice = 550.56m,
+                    LowPrice = 550.56m,
+                    TimesAdded = 1,
+                    TotalSum = 550.56m,
+                    Shop = ShopName.Shop1A
+                })
+                .Returns(new ElectricScooter()
+                {
+                    Name = "Elektriskais skūteris Razor E100 Blue",
+                    Price = 110.56m,
+                    HighPrice = 110.56m,
+                    LowPrice = 110.56m,
+                    TimesAdded = 1,
+                    TotalSum = 110.56m,
+                    Shop = ShopName.Shop1A
+                });
+            // Act
+            _productService.SaveProducts(products);
+            // Assert
+            _repoMock.Verify(x => x.Update(It.Is<IEnumerable<Product>>(x =>
             x.ElementAt(0).Price == 220.56m &&
             x.ElementAt(0).LowPrice == 220.56m &&
             x.ElementAt(0).TotalSum == 550.56m + 220.56m &&
@@ -108,7 +143,9 @@ namespace WebShopScraper.Test
             x.ElementAt(1).TotalSum == 341.08m + 110.56m &&
             x.ElementAt(1).TimesAdded == 2 &&
             x.ElementAt(1).AvgPrice == (341.08m + 110.56m) / 2)));
+            
         }
+
         [DataTestMethod]
         [DynamicData(nameof (GetProducts), DynamicDataSourceType.Method)]
         public void return_all_products_of_same_type(IEnumerable<Product> products)
