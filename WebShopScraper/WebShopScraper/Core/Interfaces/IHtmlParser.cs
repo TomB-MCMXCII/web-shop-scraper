@@ -1,12 +1,13 @@
 ﻿using RestSharp;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using WebShopScraper.Core.Models;
 
 namespace WebShopScraper.Models
 {
-    public interface IHtmlParser<TEntity> where TEntity : class
+    public interface IShopProductParser
     {
-        List<TEntity> GetProducts(string response);
+        List<TEntity> ParseHtmlStringToProducts<TEntity>(string response) where TEntity : Product, new();
     }
 }

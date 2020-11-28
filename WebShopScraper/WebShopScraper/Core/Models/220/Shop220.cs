@@ -12,16 +12,16 @@ namespace WebShopScraper.Core.Models._220
         {
             _config = config;
             Categories = new List<Category>();
+            ReadBaseUrl();
+            ReadCategories();
         }
         private readonly IConfiguration _config;
-        public ShopName ShopName => ShopName.Shop220;
-
         public Uri BaseUrl { get; set; }
         public List<Category> Categories { get; set; }
+        public ShopName ShopName { get => ShopName.Shop220; }
+        public void ReadBaseUrl() => BaseUrl = new Uri("https://220.lv/lv/");
 
-        public void SetBaseUrl() => BaseUrl = new Uri(_config.GetSection("220:BaseUrl").Value.ToString());
-
-        public void SetCategories()
+        public void ReadCategories()
         {
             foreach (var a in (ProductCategory[])Enum.GetValues(typeof(ProductCategory)))
             {
@@ -32,5 +32,6 @@ namespace WebShopScraper.Core.Models._220
                 });
             }
         }
+
     }
 }

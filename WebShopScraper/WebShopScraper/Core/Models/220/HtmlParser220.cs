@@ -9,47 +9,47 @@ using WebShopScraper.Models;
 
 namespace WebShopScraper.Core.Models._220
 {
-    public class HtmlParser220<TEntity> : IHtmlParser<TEntity> where TEntity : Product, new()
+    public class HtmlParser220 : BaseParser, IShopProductParser
     {
-        private List<TEntity> _products;
-        private IHtmlCollection<IElement> _productElements;
-        public HtmlParser220()
+        public List<TEntity> ParseHtmlStringToProducts<TEntity>(string responses) where TEntity : Product, new()
         {
-            _products = new List<TEntity>();
-        }
-        public List<TEntity> GetProducts(string response)
-        {
+            List<TEntity> _products = new List<TEntity>();
+
             var config = Configuration.Default;
             var context = BrowsingContext.New(config);
             var parser = context.GetService<AngleSharp.Html.Parser.IHtmlParser>();
+            
+                var document = parser.ParseDocument(responses);
+                var _productElements = document.GetElementsByClassName("product-list-item tag-top");
 
-            var document = parser.ParseDocument(response);
-            _productElements = document.GetElementsByClassName("product-list-item tag-top");
-            foreach (var a in _productElements)
-            {
-                try
+                foreach (var a in _productElements)
                 {
-                    var product = new TEntity()
+                    try
                     {
-                        Name = a.GetElementsByClassName("product-name").First().TextContent.Trim(),
-                        Price = decimal.Parse(a.GetElementsByClassName("price notranslate").First().TextContent.Replace('€', ' ').Replace(',', '.').Replace(" ", "").Trim()),
-                        Shop = ShopName.Shop220,
-                        Url = a.GetElementsByClassName("cover-link").FirstOrDefault().GetAttribute("href")
-                };
-                    
-                    _products.Add(product);
+                        var product = new TEntity()
+                        {
+                            Name = a.GetElementsByClassName("product-name").First().TextContent.Trim(),
+                            Price = decimal.Parse(a.GetElementsByClassName("price notranslate").First().TextContent.Replace('€', ' ').Replace(',', '.').Replace(" ", "").Trim()),
+                            Shop = ShopName.Shop220,
+                            Url = a.GetElementsByClassName("cover-link").FirstOrDefault().GetAttribute("href")
+                        };
+
+                        _products.Add(product);
+                    }
+                    catch
+                    {
+
+                    }
                 }
-                catch
+                if (_products.Count == 0)
                 {
-
+                    OnZeroProductsParsed(EventArgs.Empty);
                 }
-            }
-
+            
+            
             return _products;
         }
-        public TEntity SetCustomProperties(TEntity entity)
-        {
-            return new TEntity();
-        }
+
+        
     }
 }

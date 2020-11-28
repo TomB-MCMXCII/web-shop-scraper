@@ -11,15 +11,18 @@ namespace WebShopScraper.Models
         private readonly IConfiguration _config;
         public Uri BaseUrl { get; set; }
         public List<Category> Categories { get; set; }
-        public ShopName ShopName => ShopName.Shop1A;
+        public ShopName ShopName { get => ShopName.Shop1A;}
+
         public Shop1A(IConfiguration config)
-        {
-            _config = config;
+        { 
             Categories = new List<Category>();
+            _config = config;
+            ReadBaseUrl();
+            ReadCategories();
         }
-        public void SetBaseUrl() => BaseUrl = new Uri(_config.GetSection("1A:BaseUrl").Value.ToString());
-        //todo create exception 
-        public void SetCategories()
+        public void ReadBaseUrl() => BaseUrl = new Uri("https://www.1a.lv/");
+
+        public void ReadCategories()
         {
             foreach (var a in (ProductCategory[])Enum.GetValues(typeof(ProductCategory)))
             {

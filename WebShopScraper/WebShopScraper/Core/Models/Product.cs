@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WebShopScraper.Core.Models
 {
-    public class Product
+    public class Product 
     {
         public Product()
         {

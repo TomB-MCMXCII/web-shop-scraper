@@ -7,6 +7,8 @@ using RestSharp;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using WebShopScraper.Core;
+using WebShopScraper.Models;
+using WebShopScraper.Core.Models;
 
 namespace WebShopScraper
 {
@@ -14,31 +16,28 @@ namespace WebShopScraper
     {
         static void Main(string[] args)
         {
-            var builder = new ConfigurationBuilder();
-            BuildConfig(builder);
-            Log.Logger = new LoggerConfiguration()
-                    .ReadFrom.Configuration(builder.Build())
-                    .Enrich.FromLogContext()
-                    .WriteTo.Console()
-                    .CreateLogger();
+            var configBuilder = new ConfigurationBuilder();
+            BuildConfig(configBuilder);
 
             var host = CreateHostBuilder(args)
-                .UseSerilog()
                 .Build();
           
-            var controller = ActivatorUtilities.CreateInstance<Application>(host.Services);
-            controller.StartApplication();
+            var scraper = ActivatorUtilities.CreateInstance<Scraper>(host.Services);
+            scraper.Build().Start();
         }
-        //Method with this exact signature is called when adding new migration
+        //Method with this exact signature is called when adding new migration. Had erros when adding new migration
         public static IHostBuilder CreateHostBuilder(string[] args) 
         {
             var host = Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddDbContext<WebShopScraperDbContext>(options =>
-                        options.UseSqlServer("Server=tcp:scrapertomb.database.windows.net,1433;Initial Catalog=Scraper;Persist Security Info=False;User ID=tomb;Password=pendulum08!@#;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"));
-                    services.AddTransient<IWebClient, WebClient>();
+                    services.AddDbContext<WebShopScraperDbContext>(options => options.UseSqlServer(hostContext.Configuration.GetConnectionString("azure")));
+                    services.AddScoped<IWebClient, WebClient>();
                     services.AddHttpClient();
+                    services.AddScoped<IProductProcessor, ProductProcessor>();
+                    services.AddScoped<IProductDataProvider, ProductDataProvider>();
+                    services.AddScoped<IProductComparer, ProductComparer>();
+                    services.AddScoped<IShopCreator, ShopCreator>();
                     services.AddScoped<IScraper, Scraper>();
                     services.AddScoped(typeof(IProductService<>), typeof(ProductService<>));
                     services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));

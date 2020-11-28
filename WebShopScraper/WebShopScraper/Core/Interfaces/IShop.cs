@@ -6,10 +6,9 @@ namespace WebShopScraper.Models
 {
     public interface IShop
     {
-        ShopName ShopName { get;}
         Uri BaseUrl { get; set; }
         List<Category> Categories { get; set; }
-        void SetBaseUrl();
-        void SetCategories();
+        ShopName ShopName { get; }
+
     }
 }

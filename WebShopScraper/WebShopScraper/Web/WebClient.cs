@@ -40,9 +40,8 @@ namespace WebShopScraper
             {
                 response = await _client.GetAsync(_path + $"?page={pageNumber}");
             }
-            var taskString = response.Content.ReadAsStringAsync();
-            taskString.Wait();
-            return taskString.Result;
+            var taskString =  await response.Content.ReadAsStringAsync();
+            return taskString;
         }
 
     }

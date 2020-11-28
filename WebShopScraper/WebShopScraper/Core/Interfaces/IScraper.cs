@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using WebShopScraper.Core;
 using WebShopScraper.Core.Models;
 using WebShopScraper.Models;
 
@@ -6,6 +7,7 @@ namespace WebShopScraper
 {
     public interface IScraper
     {
-        void ScrapeShops<TEntity>(List<IShop> shops) where TEntity : Product, new();
+        IScraper Start();
+        IScraper Build();
     }
 }

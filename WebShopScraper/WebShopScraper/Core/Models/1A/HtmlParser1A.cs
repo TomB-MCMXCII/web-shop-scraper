@@ -1,44 +1,46 @@
 ﻿using AngleSharp;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using WebShopScraper.Core.Models;
 
 namespace WebShopScraper.Models
 {
-    public class HtmlParser1A<TEntity> : IHtmlParser<TEntity> where TEntity : Product , new()
-    {
-        private List<TEntity> _products;
-        public HtmlParser1A()
+    public class HtmlParser1A : BaseParser, IShopProductParser
+    { 
+        public List<TEntity> ParseHtmlStringToProducts<TEntity>(string responses) where TEntity : Product , new()
         {
-            _products = new List<TEntity>();
-        }
-        public List<TEntity> GetProducts(string response)
-        {
+            List<TEntity> _products = new List<TEntity>();
             var config = Configuration.Default;
             var context = BrowsingContext.New(config);
             var parser = context.GetService<AngleSharp.Html.Parser.IHtmlParser>();
-
-            var document = parser.ParseDocument(response);
-            var coll = document.GetElementsByClassName("catalog-taxons-product__hover");
-            foreach (var a in coll)
-            {
-                var g = a.GetElementsByClassName("catalog-taxons-product__name").FirstOrDefault().GetAttribute("href");
-                try
+           
+                var document = parser.ParseDocument(responses);
+                var coll = document.GetElementsByClassName("catalog-taxons-product__hover");
+                foreach (var a in coll)
                 {
-                    var product = new TEntity()
+                    try
                     {
-                        Name = a.GetElementsByClassName("catalog-taxons-product__name").FirstOrDefault().InnerHtml.Trim(),
-                        Price = decimal.Parse(MakeDecimalString(a.GetElementsByClassName("catalog-taxons-product-price__item-price").FirstOrDefault().ChildNodes[1].TextContent.Replace(".", ","))),
-                        Shop = ShopName.Shop1A,
-                        Url = "https://www.1a.lv" + a.GetElementsByClassName("catalog-taxons-product__name").FirstOrDefault().GetAttribute("href")
-                    };
-                    _products.Add(product);
-                }
-                catch
-                {
+                        var product = new TEntity()
+                        {
+                            Name = a.GetElementsByClassName("catalog-taxons-product__name").FirstOrDefault().InnerHtml.Trim(),
+                            Price = decimal.Parse(MakeDecimalString(a.GetElementsByClassName("catalog-taxons-product-price__item-price").FirstOrDefault().ChildNodes[1].TextContent.Replace(".", ","))),
+                            Shop = ShopName.Shop1A,
+                            Url = "https://www.1a.lv" + a.GetElementsByClassName("catalog-taxons-product__name").FirstOrDefault().GetAttribute("href")
+                        };
+                        _products.Add(product);
+                    }
+                    catch
+                    {
 
+                    }
                 }
-            }
+                if (_products.Count == 0)
+                {
+                    OnZeroProductsParsed(EventArgs.Empty);
+                }
+            
+            
             return _products;
         }
 
