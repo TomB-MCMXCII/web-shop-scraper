@@ -27,10 +27,10 @@ namespace WebShopScraper.Core
             return this;
         }
 
-        public IProductProcessor Scrape<TEntity>() where TEntity : Product, new()
+        public void Scrape<TEntity>() where TEntity : Product, new()
         {
             IProductService<TEntity> _productService = (IProductService<TEntity>)_serviceProvider.GetService(typeof(IProductService<TEntity>));
-
+            nextPage = true;
             var parsedProducts = new List<TEntity>();
             foreach (var shop in _Shops)
             {
@@ -57,7 +57,6 @@ namespace WebShopScraper.Core
             }
 
             _productService.SaveProducts(parsedProducts);
-            return this;
         }
         private static void ScrapeNextPage(object sender, EventArgs e)
         {

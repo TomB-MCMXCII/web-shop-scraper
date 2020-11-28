@@ -28,9 +28,9 @@ namespace WebShopScraper
         public IScraper Start()
         {
             _productProcessor
-                .SetShops(_shops)
-                .Scrape<Cpu>()
-                .Scrape<ElectricScooter>();
+                .SetShops(_shops);
+            _productProcessor.Scrape<Cpu>();
+                 _productProcessor.Scrape<ElectricScooter>();
             return this;
         }
     }

@@ -36,7 +36,7 @@ namespace WebShopScraper
                     services.AddHttpClient();
                     services.AddScoped<IProductProcessor, ProductProcessor>();
                     services.AddScoped<IProductDataProvider, ProductDataProvider>();
-                    services.AddScoped<IProductComparer, ProductComparer>();
+                    services.AddScoped(typeof(IProductComparer<>), typeof(ProductComparer<>));
                     services.AddScoped<IShopCreator, ShopCreator>();
                     services.AddScoped<IScraper, Scraper>();
                     services.AddScoped(typeof(IProductService<>), typeof(ProductService<>));
