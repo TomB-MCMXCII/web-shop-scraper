@@ -17,14 +17,15 @@ namespace WebShopScraper.Core
             _repository = repository;
         }
 
-        public (List<TEntity> productsToUpdate, List<TEntity> productsToCreate) CompareProducts(IEnumerable<TEntity> products)
+        public (IEnumerable<TEntity> productsToUpdate, IEnumerable<TEntity> productsToCreate) CompareProducts(IEnumerable<TEntity> products)
         {
             foreach (var p in products)
             {
                 var product = _repository.ReadByName(p.Name);
+                
                 if (product != null)
                 {
-                    // todo add tests for new properties. create helper class to change properties
+                    product.Price = p.Price;
                     if (product.LowPrice > p.Price)
                     {
                         product.LowPrice = p.Price;
@@ -46,7 +47,6 @@ namespace WebShopScraper.Core
                         product.HighPriceDate = DateTime.Now;
                         product.HighLowPriceDiff = product.HighPrice - product.LowPrice;
                         productsToUpdate.Add(product);
-
                     }
                     if (product.Url != p.Url)
                     {

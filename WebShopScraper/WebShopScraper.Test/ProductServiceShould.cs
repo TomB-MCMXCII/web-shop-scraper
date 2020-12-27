@@ -12,14 +12,16 @@ namespace WebShopScraper.Test
     [TestClass]
     public class ProductServiceShould
     {
-        private static Mock<IRepository<Product>> _repoMock;
-        private static ProductService<Product> _productService;
+        private Mock<IRepository<Product>> _repoMock;
+        private Mock<IProductComparer<Product>> _comparerMock;
+        private ProductService<Product> _productService;
 
         [TestInitialize]
         public void Product()
         {
             _repoMock = new Mock<IRepository<Product>>();
-            _productService = new ProductService<Product>(_repoMock.Object);
+            _comparerMock = new Mock<IProductComparer<Product>>();
+            _productService = new ProductService<Product>(_repoMock.Object,_comparerMock.Object);
         }
 
         [DataTestMethod]
@@ -50,14 +52,21 @@ namespace WebShopScraper.Test
         {
             //Arrange
             var productCount = products.Count();
-            _repoMock.SetupSequence(x => x.ReadByName(It.IsAny<string>()))
-                .Returns(products.ElementAt(0))
-                .Returns(products.ElementAt(3));
+            var productsToCreate = new List<Product>();
+            productsToCreate.Add(products.ToList()[0]);
+            productsToCreate.Add(products.ToList()[1]);
+            var productsToUpdate = new List<Product>();
+            //_repoMock.SetupSequence(x => x.ReadByName(It.IsAny<string>()))
+            //    .Returns(products.ElementAt(0))
+            //    .Returns(products.ElementAt(3));
+            _comparerMock.Setup(x => x.CompareProducts(It.IsAny<IEnumerable<Product>>()))
+                .Returns((productsToUpdate,productsToCreate));
+
             //Act
             _productService.SaveProducts(products);
             //Assert
-            _repoMock.Verify(x => x.Create(It.Is<IEnumerable<Product>>(x => x.Count() == productCount - 2)), Times.Once); 
-            _repoMock.Verify(x => x.ReadByName(It.IsAny<string>()), Times.Exactly(productCount));
+            _repoMock.Verify(x => x.Create(It.Is<IEnumerable<Product>>(x => x.Count() == productsToCreate.Count)), Times.Once); 
+            //_repoMock.Verify(x => x.ReadByName(It.IsAny<string>()), Times.Exactly(productCount));
 
         }
         [DataTestMethod]

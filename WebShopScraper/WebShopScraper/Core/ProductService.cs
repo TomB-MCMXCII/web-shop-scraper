@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using WebShopScraper.Core.Models;
 using System;
+using System.Linq;
 
 namespace WebShopScraper.Core
 {
@@ -22,10 +23,17 @@ namespace WebShopScraper.Core
 
         public void SaveProducts(IEnumerable<TEntity> products)
         {
-            var comparedProducts = _productComparer.CompareProducts(products);
+            var (productsToUpdate, productsToCreate) = _productComparer.CompareProducts(products);
 
-            _repository.Create(comparedProducts.productsToCreate);
-            _repository.Update(comparedProducts.productsToUpdate);
+            if(productsToCreate.Any())
+            {
+                _repository.Create(productsToCreate);
+            }
+            if(productsToUpdate.Any())
+            {
+                _repository.Update(productsToUpdate);
+            }
+           
 
         }
     }

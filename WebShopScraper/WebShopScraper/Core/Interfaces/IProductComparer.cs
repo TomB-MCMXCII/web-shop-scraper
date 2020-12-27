@@ -5,6 +5,6 @@ namespace WebShopScraper.Core
 {
     public interface IProductComparer<TEntity> where TEntity : Product
     {
-        (List<TEntity> productsToUpdate, List<TEntity> productsToCreate) CompareProducts(IEnumerable<TEntity> products);
+        (IEnumerable<TEntity> productsToUpdate, IEnumerable<TEntity> productsToCreate) CompareProducts(IEnumerable<TEntity> products);
     }
 }
