@@ -19,33 +19,53 @@ namespace WebShopScraper
             var configBuilder = new ConfigurationBuilder();
             BuildConfig(configBuilder);
 
-            var host = CreateHostBuilder(args)
-                .Build();
+            //var host = CreateHostBuilder(args)
+                //.Build();
           
-            var scraper = ActivatorUtilities.CreateInstance<Scraper>(host.Services);
-            scraper.Build().Start();
+            //var scraper = ActivatorUtilities.CreateInstance<Scraper>(host.Services);
+            //scraper.Build().Start();
         }
         //Method with this exact signature is called when adding new migration. Had erros when adding new migration
-        public static IHostBuilder CreateHostBuilder(string[] args) 
-        {
-            var host = Host.CreateDefaultBuilder(args)
-                .ConfigureServices((hostContext, services) =>
-                {
-                    services.AddDbContext<WebShopScraperDbContext>(options => options.UseSqlServer(hostContext.Configuration.GetConnectionString("azure")));
-                    services.AddScoped<IWebClient, WebClient>();
-                    services.AddHttpClient();
-                    services.AddScoped<IProductProcessor, ProductProcessor>();
-                    services.AddScoped<IProductDataProvider, ProductDataProvider>();
-                    services.AddScoped(typeof(IProductComparer<>), typeof(ProductComparer<>));
-                    services.AddScoped<IShopCreator, ShopCreator>();
-                    services.AddScoped<IScraper, Scraper>();
-                    services.AddScoped(typeof(IProductService<>), typeof(ProductService<>));
-                    services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
-                    services.AddScoped<IDbContext, WebShopScraperDbContext>();
-                });
+        //public static IHostBuilder CreateHostBuilder(string[] args) 
+        //{
+        //    var host = Host.CreateDefaultBuilder(args)
+        //        .ConfigureServices((hostContext, services) =>
+        //        {
+        //            services.AddDbContext<WebShopScraperDbContext>(options => options.UseSqlServer(hostContext.Configuration.GetConnectionString("azure")));
+        //            services.AddScoped<IWebClient, WebClient>();
+        //            services.AddHttpClient();
+        //            services.AddScoped<IProductProcessor, ProductProcessor>();
+        //            services.AddScoped<IProductDataProvider, ProductDataProvider>();
+        //            services.AddScoped(typeof(IProductComparer<>), typeof(ProductComparer<>));
+        //            services.AddScoped<IShopCreator, ShopCreator>();
+        //            services.AddScoped<IScraper, Scraper>();
+        //            services.AddScoped(typeof(IProductService<>), typeof(ProductService<>));
+        //            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+        //            services.AddScoped<IDbContext, WebShopScraperDbContext>();
+        //        });
 
-            return host;
-        }
+        //    return host;
+        //}
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+        Host.CreateDefaultBuilder(args)
+            .ConfigureServices((hostContext, services) =>
+            {
+                services.AddHostedService<Scraper>();
+                services.AddSingleton<IHostedService, Scraper>();
+                services.AddDbContext<WebShopScraperDbContext>(options => options.UseSqlServer(hostContext.Configuration.GetConnectionString("azure")));
+                services.AddScoped<IWebClient, WebClient>();
+                services.AddHttpClient();
+                services.AddScoped<IProductProcessor, ProductProcessor>();
+                services.AddScoped<IProductDataProvider, ProductDataProvider>();
+                services.AddScoped(typeof(IProductComparer<>), typeof(ProductComparer<>));
+                services.AddScoped<IShopCreator, ShopCreator>();
+                //services.AddScoped<IScraper, Scraper>();
+                services.AddScoped(typeof(IProductService<>), typeof(ProductService<>));
+                services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
+                services.AddScoped<IDbContext, WebShopScraperDbContext>();
+            });
+
         static void BuildConfig(IConfigurationBuilder builder)
         {
             builder.SetBasePath(Directory.GetCurrentDirectory())
