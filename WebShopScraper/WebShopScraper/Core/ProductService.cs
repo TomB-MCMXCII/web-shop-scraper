@@ -2,6 +2,7 @@
 using WebShopScraper.Core.Models;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WebShopScraper.Core
 {
@@ -16,22 +17,22 @@ namespace WebShopScraper.Core
             _productComparer = productComparer;
         }
 
-        public IEnumerable<TEntity> GetProducts()
+        public async Task<IEnumerable<TEntity>> GetProducts()
         {
-            return _repository.Read();
+            return await _repository.Read();
         }
 
-        public void SaveProducts(IEnumerable<TEntity> products)
+        public async Task SaveProducts(IEnumerable<TEntity> products)
         {
             var (productsToUpdate, productsToCreate) = _productComparer.CompareProducts(products);
 
             if(productsToCreate.Any())
             {
-                _repository.Create(productsToCreate);
+                await _repository.Create(productsToCreate);
             }
             if(productsToUpdate.Any())
             {
-                _repository.Update(productsToUpdate);
+                await _repository.Update(productsToUpdate);
             }
            
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using WebShopScraper.Core.Models;
 using WebShopScraper.Models;
 
@@ -27,7 +28,7 @@ namespace WebShopScraper.Core
             return this;
         }
 
-        public void Scrape<TEntity>() where TEntity : Product, new()
+        public async Task Scrape<TEntity>() where TEntity : Product, new()
         {
             IProductService<TEntity> _productService = (IProductService<TEntity>)_serviceProvider.GetService(typeof(IProductService<TEntity>));
             nextPage = true;
@@ -56,7 +57,7 @@ namespace WebShopScraper.Core
                 }
             }
 
-            _productService.SaveProducts(parsedProducts);
+            await _productService.SaveProducts(parsedProducts);
         }
         private static void ScrapeNextPage(object sender, EventArgs e)
         {

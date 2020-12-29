@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using WebShopScraper.Core.Models;
 
 namespace WebShopScraper.Core
@@ -16,20 +18,20 @@ namespace WebShopScraper.Core
             _context = context;
             _dbSet = context.Set<TEntity>();
         }
-        public void Create(IEnumerable<TEntity> products)
+        public async Task Create(IEnumerable<TEntity> products)
         {
             _dbSet.AddRange(products);       
-            _context.SaveChanges();
+            await _context.SaveChangesAsync(default);
         }
         public void Read(TEntity entity)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(IEnumerable<TEntity> entity)
+        public async Task Update(IEnumerable<TEntity> entity)
         {
             _dbSet.UpdateRange(entity);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync(default);
         }
 
         public void Delete()
@@ -43,9 +45,9 @@ namespace WebShopScraper.Core
             return product;
         }
 
-        public IEnumerable<TEntity> Read()
+        public async Task<IEnumerable<TEntity>> Read()
         {
-            var dbset = _dbSet.ToList();
+            var dbset = await _dbSet.ToListAsync();
 
             return dbset;
         }

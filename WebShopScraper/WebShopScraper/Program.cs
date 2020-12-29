@@ -9,50 +9,26 @@ using Microsoft.EntityFrameworkCore;
 using WebShopScraper.Core;
 using WebShopScraper.Models;
 using WebShopScraper.Core.Models;
+using System.Threading.Tasks;
 
 namespace WebShopScraper
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
-            var configBuilder = new ConfigurationBuilder();
-            BuildConfig(configBuilder);
-
-            //var host = CreateHostBuilder(args)
-                //.Build();
-          
-            //var scraper = ActivatorUtilities.CreateInstance<Scraper>(host.Services);
-            //scraper.Build().Start();
+            using var host = CreateHostBuilder(args)
+                .Build();
+            await host.StartAsync();
+            await host.StopAsync();
         }
-        //Method with this exact signature is called when adding new migration. Had erros when adding new migration
-        //public static IHostBuilder CreateHostBuilder(string[] args) 
-        //{
-        //    var host = Host.CreateDefaultBuilder(args)
-        //        .ConfigureServices((hostContext, services) =>
-        //        {
-        //            services.AddDbContext<WebShopScraperDbContext>(options => options.UseSqlServer(hostContext.Configuration.GetConnectionString("azure")));
-        //            services.AddScoped<IWebClient, WebClient>();
-        //            services.AddHttpClient();
-        //            services.AddScoped<IProductProcessor, ProductProcessor>();
-        //            services.AddScoped<IProductDataProvider, ProductDataProvider>();
-        //            services.AddScoped(typeof(IProductComparer<>), typeof(ProductComparer<>));
-        //            services.AddScoped<IShopCreator, ShopCreator>();
-        //            services.AddScoped<IScraper, Scraper>();
-        //            services.AddScoped(typeof(IProductService<>), typeof(ProductService<>));
-        //            services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
-        //            services.AddScoped<IDbContext, WebShopScraperDbContext>();
-        //        });
-
-        //    return host;
-        //}
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
             .ConfigureServices((hostContext, services) =>
             {
                 services.AddHostedService<Scraper>();
-                services.AddSingleton<IHostedService, Scraper>();
+                
                 services.AddDbContext<WebShopScraperDbContext>(options => options.UseSqlServer(hostContext.Configuration.GetConnectionString("azure")));
                 services.AddScoped<IWebClient, WebClient>();
                 services.AddHttpClient();
@@ -60,18 +36,14 @@ namespace WebShopScraper
                 services.AddScoped<IProductDataProvider, ProductDataProvider>();
                 services.AddScoped(typeof(IProductComparer<>), typeof(ProductComparer<>));
                 services.AddScoped<IShopCreator, ShopCreator>();
-                //services.AddScoped<IScraper, Scraper>();
+
                 services.AddScoped(typeof(IProductService<>), typeof(ProductService<>));
                 services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
                 services.AddScoped<IDbContext, WebShopScraperDbContext>();
-            });
-
-        static void BuildConfig(IConfigurationBuilder builder)
-        {
-            builder.SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
-                .AddEnvironmentVariables();
-        }
+            })
+            .ConfigureAppConfiguration(x => x.SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+            .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
+            .AddEnvironmentVariables());
     }
 }

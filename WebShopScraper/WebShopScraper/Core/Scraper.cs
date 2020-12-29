@@ -12,7 +12,7 @@ using WebShopScraper.Models;
 
 namespace WebShopScraper
 {
-    public class Scraper : IHostedService
+    public class Scraper :  BackgroundService
     {
         private readonly IProductProcessor _productProcessor;
         private readonly IShopCreator _shopCreator;
@@ -23,9 +23,7 @@ namespace WebShopScraper
         {
             _productProcessor = productProcessor;
             _shopCreator = shopCreator;
-            appLifetime.ApplicationStarted.Register(OnStarted);
-            appLifetime.ApplicationStopping.Register(OnStopping);
-            appLifetime.ApplicationStopped.Register(OnStopped);
+           
             _logger = logger;
         }
 
@@ -34,43 +32,21 @@ namespace WebShopScraper
             _shops = _shopCreator.CreateShops();
         }
 
-        public void Start()
+        public async Task Start()
         {
-            _productProcessor
+             _productProcessor
                 .SetShops(_shops);
-            _productProcessor.Scrape<Cpu>();
-                 _productProcessor.Scrape<ElectricScooter>();
+            await _productProcessor.Scrape<Cpu>();
+            await _productProcessor.Scrape<ElectricScooter>();
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+       
+
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             _logger.LogInformation("1. StartAsync has been called.");
             Build();
-            Start();
-            return Task.CompletedTask;
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            _logger.LogInformation("4. StopAsync has been called.");
-            return Task.CompletedTask;
-        }
-
-        private void OnStarted()
-        {
-            Build();
-            Start();
-            _logger.LogInformation("2. OnStarted has been called.");
-        }
-
-        private void OnStopping()
-        {
-            _logger.LogInformation("3. OnStopping has been called.");
-        }
-
-        private void OnStopped()
-        {
-            _logger.LogInformation("5. OnStopped has been called.");
+            await Start();
         }
     }
 }

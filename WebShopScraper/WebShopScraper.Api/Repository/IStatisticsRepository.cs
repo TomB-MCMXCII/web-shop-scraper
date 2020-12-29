@@ -1,7 +1,10 @@
-﻿namespace WebShopScraper.Api.Repository
+﻿using System.Collections.Generic;
+using WebShopScraper.Api.Models;
+
+namespace WebShopScraper.Api.Repository
 {
     public interface IStatisticsRepository
     {
-        void GetAddedCountData();
+        IEnumerable<TimesAddedStatisticsItem> GetAddedCountData();
     }
 }

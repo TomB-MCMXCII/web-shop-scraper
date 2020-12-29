@@ -7,7 +7,7 @@ namespace WebShopScraper
 {
     public interface IScraper
     {
-        IScraper Start();
-        IScraper Build();
+        void Start();
+        void Build();
     }
 }

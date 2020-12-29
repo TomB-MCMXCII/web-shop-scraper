@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebShopScraper.Core.Models;
 
 namespace WebShopScraper.Core
 {
     public interface IProductService<TEntity> where TEntity : Product
     {
-        void SaveProducts(IEnumerable<TEntity> products);
-        IEnumerable<TEntity> GetProducts();
+        Task SaveProducts(IEnumerable<TEntity> products);
+        Task<IEnumerable<TEntity>> GetProducts();
     }
 }

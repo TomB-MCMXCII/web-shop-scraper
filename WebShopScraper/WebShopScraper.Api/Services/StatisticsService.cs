@@ -17,11 +17,11 @@ namespace WebShopScraper.Api.Services
             _statisticsRepository = statisticsRepository;
         }
 
-        public ShopPriceChangeDto GetShopPriceChangeData()
+        public IEnumerable<TimesAddedStatisticsItem> GetShopPriceChangeData()
         {
-            _statisticsRepository.GetAddedCountData();
+            
 
-            return new ShopPriceChangeDto();
+            return _statisticsRepository.GetAddedCountData();
         }
     }
 }

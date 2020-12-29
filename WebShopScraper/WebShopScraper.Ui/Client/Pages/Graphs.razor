@@ -1,0 +1,44 @@
+﻿@page "/graphs"
+@inject IJSRuntime JSRuntime
+@inject HttpClient Http
+@implements IAsyncDisposable
+
+<div id="canvas-holder">
+    <canvas id="myChart"></canvas>
+</div>
+
+<style>
+    #canvas-holder {
+        background-color: #FFFFFF;
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        border: 5px groove rgba(28,110,164,0.75);
+        border-radius: 20px;
+    }
+</style>
+
+@code {
+
+    private string name;
+
+
+    private Task<IJSObjectReference> _module;
+    private Task<IJSObjectReference> Module => _module ??= JSRuntime.InvokeAsync<IJSObjectReference>("import", "./chart.js").AsTask();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var module = await Module;
+        await module.InvokeVoidAsync("createChart");
+        
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (_module != null)
+        {
+            var module = await _module;
+            await module.DisposeAsync();
+        }
+    }
+}
