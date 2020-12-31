@@ -1,7 +1,7 @@
 ﻿@page "/graphs"
 @inject IJSRuntime JSRuntime
 @inject HttpClient Http
-@implements IAsyncDisposable
+@*@implements IAsyncDisposable*@
 
 <div id="canvas-holder">
     <canvas id="myChart"></canvas>
@@ -11,10 +11,11 @@
     #canvas-holder {
         background-color: #FFFFFF;
         position: absolute;
-        width: 400px;
-        height: 400px;
+        padding: 1rem;
         border: 5px groove rgba(28,110,164,0.75);
         border-radius: 20px;
+        width: 30%;
+        display: flex;
     }
 </style>
 
@@ -29,16 +30,21 @@
     protected override async Task OnInitializedAsync()
     {
         var module = await Module;
-        await module.InvokeVoidAsync("createChart");
-        
+        var result = await Http.GetFromJsonAsync<List<TimesAddedStatisticsItem>>("https://localhost:44372/pricechange");
+        var gg = JsonConvert.SerializeObject(result);
+
+        await module.InvokeVoidAsync("createChart", gg);
+
+
+
     }
 
-    public async ValueTask DisposeAsync()
-    {
-        if (_module != null)
-        {
-            var module = await _module;
-            await module.DisposeAsync();
-        }
-    }
+    //public async ValueTask DisposeAsync()
+    //{
+    //    if (_module != null)
+    //    {
+    //        var module = await _module;
+    //        await module.DisposeAsync();
+    //    }
+    //}
 }
