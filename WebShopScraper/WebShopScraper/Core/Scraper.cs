@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -12,18 +13,19 @@ using WebShopScraper.Models;
 
 namespace WebShopScraper
 {
-    public class Scraper :  BackgroundService
+    public class Scraper
     {
         private readonly IProductProcessor _productProcessor;
         private readonly IShopCreator _shopCreator;
+        private readonly IServiceProvider _services;
         private IEnumerable<IShop> _shops;
         private readonly ILogger _logger;
 
-        public Scraper(IProductProcessor productProcessor,IShopCreator shopCreator, IHostApplicationLifetime appLifetime, ILogger<Scraper> logger)
+        public Scraper(IProductProcessor productProcessor,IShopCreator shopCreator, IServiceProvider services, ILogger<Scraper> logger)
         {
             _productProcessor = productProcessor;
             _shopCreator = shopCreator;
-           
+            _services = services;
             _logger = logger;
         }
 
@@ -34,19 +36,11 @@ namespace WebShopScraper
 
         public async Task Start()
         {
-             _productProcessor
-                .SetShops(_shops);
-            await _productProcessor.Scrape<Cpu>();
-            await _productProcessor.Scrape<ElectricScooter>();
-        }
-
-       
-
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
-        {
-            _logger.LogInformation("1. StartAsync has been called.");
             Build();
-            await Start();
+            _productProcessor
+                .SetShops(_shops);
+           
+            await _productProcessor.Scrape<Product>();
         }
     }
 }

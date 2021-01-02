@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using WebShopScraper.Core.Models;
 using WebShopScraper.Models;
 
@@ -16,13 +17,19 @@ namespace WebShopScraper.Core
         {
             HttpClientFactory = httpClientFactory;
         }
-        public string GetProductData<TEntity>(IShop shop,int pageNumber) where TEntity : Product
+        public async Task<List<string>> GetProductData<TEntity>(IShop shop,int pageNumber) where TEntity : Product
         {
+            var htmlStrings = new List<string>();
             var _client = new WebClient(HttpClientFactory);
             _client.SetBaseUri(shop.BaseUrl);
-            _client.SetPath(shop.Categories.Where(x => x.ProductCategory.ToString() == typeof(TEntity).Name).FirstOrDefault().Path);
-            var htmlStrings = new List<string>();
-            return _client.GetPageHtmlContent(pageNumber, shop).Result;
+            foreach(var cat in shop.Categories)
+            {
+                _client.SetPath(cat.Path);
+                
+                htmlStrings.Add(await _client.GetPageHtmlContent(pageNumber, shop));
+            }
+            return htmlStrings;
+            
         }
     }
 }

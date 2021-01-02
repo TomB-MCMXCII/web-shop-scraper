@@ -19,17 +19,18 @@ namespace WebShopScraper
         {
             using var host = CreateHostBuilder(args)
                 .Build();
-            await host.StartAsync();
-            await host.StopAsync();
+            
+            var scraper = ActivatorUtilities.CreateInstance<Scraper>(host.Services);
+            await scraper.Start();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
             .ConfigureServices((hostContext, services) =>
             {
-                services.AddHostedService<Scraper>();
+                //ervices.AddHostedService<Scraper>();
                 
-                services.AddDbContext<WebShopScraperDbContext>(options => options.UseSqlServer(hostContext.Configuration.GetConnectionString("azure")));
+                services.AddDbContext<WebShopScraperDbContext>(options => options.UseSqlServer(hostContext.Configuration.GetConnectionString("local")));
                 services.AddScoped<IWebClient, WebClient>();
                 services.AddHttpClient();
                 services.AddScoped<IProductProcessor, ProductProcessor>();

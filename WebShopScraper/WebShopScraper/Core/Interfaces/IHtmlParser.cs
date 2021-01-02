@@ -8,6 +8,6 @@ namespace WebShopScraper.Models
 {
     public interface IShopProductParser
     {
-        List<TEntity> ParseHtmlStringToProducts<TEntity>(string response) where TEntity : Product, new();
+        List<TEntity> ParseHtmlStringToProducts<TEntity>(List<string> response) where TEntity : Product, new();
     }
 }

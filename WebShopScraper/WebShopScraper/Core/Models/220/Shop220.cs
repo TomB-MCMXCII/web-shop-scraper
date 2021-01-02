@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using WebShopScraper.Core.Enums;
 using WebShopScraper.Models;
 
 namespace WebShopScraper.Core.Models._220

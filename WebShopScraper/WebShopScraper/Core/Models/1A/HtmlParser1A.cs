@@ -2,20 +2,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using WebShopScraper.Core.Enums;
 using WebShopScraper.Core.Models;
 
 namespace WebShopScraper.Models
 {
     public class HtmlParser1A : BaseParser, IShopProductParser
     { 
-        public List<TEntity> ParseHtmlStringToProducts<TEntity>(string responses) where TEntity : Product , new()
+        public List<TEntity> ParseHtmlStringToProducts<TEntity>(List<string> responses) where TEntity : Product , new()
         {
             List<TEntity> _products = new List<TEntity>();
             var config = Configuration.Default;
             var context = BrowsingContext.New(config);
             var parser = context.GetService<AngleSharp.Html.Parser.IHtmlParser>();
-           
-                var document = parser.ParseDocument(responses);
+            foreach(var res in responses)
+            {
+                var document = parser.ParseDocument(res);
                 var coll = document.GetElementsByClassName("catalog-taxons-product__hover");
                 foreach (var a in coll)
                 {
@@ -25,7 +27,7 @@ namespace WebShopScraper.Models
                         {
                             Name = a.GetElementsByClassName("catalog-taxons-product__name").FirstOrDefault().InnerHtml.Trim(),
                             Price = decimal.Parse(MakeDecimalString(a.GetElementsByClassName("catalog-taxons-product-price__item-price").FirstOrDefault().ChildNodes[1].TextContent.Replace(".", ","))),
-                            Shop = ShopName.Shop1A,
+                            Shop = (int)ShopName.Shop1A,
                             Url = "https://www.1a.lv" + a.GetElementsByClassName("catalog-taxons-product__name").FirstOrDefault().GetAttribute("href")
                         };
                         _products.Add(product);
@@ -45,11 +47,11 @@ namespace WebShopScraper.Models
                 if (_products.Count == 0)
                 {
                     OnZeroProductsParsed(EventArgs.Empty);
-                }
-            
-            
+                }  
+            }
             return _products;
         }
+                
 
         private string MakeDecimalString(string price)
         {

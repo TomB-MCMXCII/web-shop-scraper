@@ -19,7 +19,7 @@ namespace WebShopScraper.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("WebShopScraper.Cpu", b =>
+            modelBuilder.Entity("WebShopScraper.Core.Models.Product", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -28,6 +28,9 @@ namespace WebShopScraper.Migrations
 
                     b.Property<decimal>("AvgPrice")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("Category")
+                        .HasColumnType("int");
 
                     b.Property<decimal>("HighLowPriceDiff")
                         .HasColumnType("decimal(18,2)");
@@ -64,55 +67,7 @@ namespace WebShopScraper.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cpus");
-                });
-
-            modelBuilder.Entity("WebShopScraper.ElectricScooter", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<decimal>("AvgPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("HighLowPriceDiff")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<decimal>("HighPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("HighPriceDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<decimal>("LowPrice")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<DateTime>("LowPriceDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<int>("Shop")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TimesAdded")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TotalSum")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("ElectricScooters");
+                    b.ToTable("Products");
                 });
 #pragma warning restore 612, 618
         }

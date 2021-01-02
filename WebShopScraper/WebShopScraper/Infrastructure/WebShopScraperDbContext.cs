@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using WebShopScraper.Core.Models;
 
 namespace WebShopScraper
 {
     public class WebShopScraperDbContext: DbContext, IDbContext
     {
-        public DbSet<ElectricScooter> ElectricScooters { get; set; }
-        public DbSet<Cpu> Cpus { get; set; }
+        public DbSet<Product> Products { get; set; }
 
         public WebShopScraperDbContext(DbContextOptions<WebShopScraperDbContext> options ) : base(options)
         {

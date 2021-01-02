@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using WebShopScraper.Core.Enums;
 using WebShopScraper.Core.Models;
 
 namespace WebShopScraper.Models

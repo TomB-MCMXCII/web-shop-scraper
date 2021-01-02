@@ -31,10 +31,11 @@ namespace WebShopScraper.Core
         public async Task Scrape<TEntity>() where TEntity : Product, new()
         {
             IProductService<TEntity> _productService = (IProductService<TEntity>)_serviceProvider.GetService(typeof(IProductService<TEntity>));
-            nextPage = true;
+            
             var parsedProducts = new List<TEntity>();
             foreach (var shop in _Shops)
             {
+                nextPage = true;
                 var pageNumber = 0;
                 var p = new BaseParser();
                 p.Stop += ScrapeNextPage;
@@ -42,7 +43,7 @@ namespace WebShopScraper.Core
                 while(nextPage)
                 {
                     pageNumber++;
-                    var productData = _productDataProvider.GetProductData<TEntity>(shop, pageNumber);
+                    var productData = await _productDataProvider.GetProductData<TEntity>(shop, pageNumber);
                     var parser = ShopProductParserFactory.GetShopParserInstance<TEntity>(shop);
                     var productsList = parser.ParseHtmlStringToProducts<TEntity>(productData);
 
