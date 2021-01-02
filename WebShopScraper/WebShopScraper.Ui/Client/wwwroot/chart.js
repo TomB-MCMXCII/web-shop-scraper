@@ -7,7 +7,7 @@
         data: {
             labels: ['1A', '220', /*'Yellow', 'Green', 'Purple', 'Orange'*/],
             datasets: [{
-                label: '# of Votes',
+                label: 'Price changed for Cpu\'s',
                 data: [ff[0].TimesAddedSum, ff[1].TimesAddedSum],
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
